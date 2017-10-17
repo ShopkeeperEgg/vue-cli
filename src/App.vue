@@ -62,7 +62,7 @@
 
 <script>
     import HelloWorld from './components/HelloWorld'
-    import _ from './assets/js/color'
+//    import './assets/js/color'
 
     export default {
         name: 'app',
