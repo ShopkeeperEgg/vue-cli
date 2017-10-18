@@ -1,20 +1,17 @@
 <template>
     <div id="app">
-        <img src="./assets/logo.png">
-        <img src="./assets/telegram_icon.png" height="112" width="112"/>
-        <hello-world/>
-        <div class="gradient"></div>
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Brand</a>
+                    <a class="navbar-brand" href="#">{{title}}</a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -23,7 +20,8 @@
                         <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
                         <li><a href="#">Link</a></li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#">Action</a></li>
                                 <li><a href="#">Another action</a></li>
@@ -44,7 +42,8 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="#">Link</a></li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#">Action</a></li>
                                 <li><a href="#">Another action</a></li>
@@ -57,33 +56,54 @@
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
-    import HelloWorld from './components/HelloWorld'
-//    import './assets/js/color'
+    import index from './components/index';
+    import tools from './assets/js/tools';
 
     export default {
+        // 没啥大用处
         name: 'app',
+        data() {
+            return {
+                title: '我是一个小毛驴'
+            }
+        },
+        methods: {
+            // 绑定事件的方法
+
+        },
+        created() {
+            // 可以在此为所欲为
+            tools.jsonp('/weather/query', {appkey: 'af5b43afe5b3da96',city:'北京'}, function (data) {
+                console.log(data);
+            }, function (data) {
+                console.log(data, 1);
+            })
+        },
         components: {
-            HelloWorld
+            // 引入的组件写在这里
+            index
+        },
+        watch: {
+            // 监听数据变化
+            // a: function (val, oldVal) {
+            //     console.log('new: %s, old: %s', val, oldVal)
+            // },
+            // // 方法名
+            // b: 'someMethod',
+            // // 深度 watcher
+            // c: {
+            //    handler: function (val, oldVal) { /* ... */ },
+            //    deep: true
+            // }
         }
     }
 </script>
 
 <style>
-    #app {
-        font-family: 'Avenir', Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-align: center;
-        color: #2c3e50;
-        margin-top: 60px;
-    }
-    .gradient {
-        width: 100px;
-        height: 100px;
 
-    }
 </style>
