@@ -1,5 +1,10 @@
+<style lang="less">
+
+</style>
+
 <template>
     <div id="app">
+        <div class="a"></div>
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
@@ -104,6 +109,4 @@
     }
 </script>
 
-<style>
 
-</style>
