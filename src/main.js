@@ -8,6 +8,10 @@ import './assets/js/bootstrap.min.js'
 import './assets/css/bootstrap.min.css'
 import './assets/css/common.css'
 
+import VueResource from 'vue-resource'
+
+Vue.use(VueResource);
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
@@ -15,5 +19,5 @@ new Vue({
     el: '#app',
     template: '<App/>',
     components: {App},
-    router
-})
+    router,
+});

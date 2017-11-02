@@ -77,6 +77,6 @@ module.exports = {
                 'jquery': "jquery/src/jquery"
             }
         })
-    ],
+    ]
 }
 
