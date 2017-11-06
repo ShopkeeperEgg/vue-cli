@@ -1,18 +1,22 @@
-<style lang="less">
+<style scope lang="less">
 
 </style>
 
 <template>
-    <div id="app">
-        <router-view>
-        </router-view>
+    <div>
+        <!--Do it!-->
+        <nav-bar></nav-bar>
+        <router-view></router-view>
+        <bottom></bottom>
     </div>
 </template>
 
 <script>
-    import home from './components/home/home';
-    import navBar from './components/nav.vue';
-    import bottom from './components/bottom.vue';
+    //    import t from '../assets/js/tools';
+    import navBar from './nav.vue';
+    import bottom from './bottom.vue';
+    import home from './home/home';
+
 
     export default {
         // 没啥大用处
@@ -26,12 +30,20 @@
             // 绑定事件的方法
 
         },
+        mounted: function () {
+            this.$nextTick(function () {
+                // 可以在此为所欲为
+                //对DOM的操作放这
+                //console.log(this);
+
+            })
+        },
         created() {
-            // 可以在此为所欲为
+
         },
         components: {
             // 引入的组件写在这里
-            home, navBar, bottom
+            navBar, bottom
         },
         watch: {
             // 监听数据变化
@@ -48,5 +60,3 @@
         }
     }
 </script>
-
-

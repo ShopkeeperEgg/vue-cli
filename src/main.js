@@ -20,4 +20,4 @@ new Vue({
     template: '<App/>',
     components: {App},
     router,
-});
+}).$mount('#app');

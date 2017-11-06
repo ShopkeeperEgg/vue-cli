@@ -1,260 +1,341 @@
 <style scope lang="less">
-    .nav-content {
-        width: 100%;
-        height: 93px;
-        background-color: #fff;
-        box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px 0;
-        position: fixed;
-        top: 0;
-        text-align: center;
-        z-index: 999;
-        .nav {
-            a {
-                display: inline-block;
-                font-size: 12px;
-                line-height: 93px;
-                width: 80px;
-                color: #717171;
-                position: relative;
-                &:hover {
-                    color: #3D96FF;
-                    text-decoration: none;
-                }
-                &:focus {
-                    text-decoration: none;
-                }
-                &.active {
-                    color: #3D96FF;
-                    &:after {
-                        content: '';
-                        width: 24px;
-                        height: 3px;
-                        background-color: #3D96FF;
-                        border-radius: 1.5px;
-                        position: absolute;
-                        bottom: 0;
-                        left: 50%;
-                        transform: translateX(-50%);
-                    }
-                }
-            }
-            .logo {
-                img {
-                    width: 78px;
-                }
-            }
-            &.st1 {
-                a {
-                    &:hover {
-                        color: #3D96FF;
-                    }
-                    &.active {
-                        &:after {
-                            background-color: #3D96FF;
-                        }
-                    }
-                }
-            }
-            &.st2 {
-                a {
-                    &:hover {
-                        color: #FF65A2;
-                    }
-                    &.active {
-                        color: #FF65A2;
-                        &:after {
-                            background-color: #FF65A2;
-                        }
-                    }
-                }
-
-            }
-            &.st3 {
-                a {
-                    &:hover {
-                        color: #FF883D;
-                    }
-                    &.active {
-                        color: #FF883D;
-                        &:after {
-                            background-color: #FF883D;
-                        }
-                    }
-                }
-
-            }
-            &.st4 {
-                a {
-                    &:hover {
-                        color: #B950E3;
-                    }
-                    &.active {
-                        color: #B950E3;
-                        &:after {
-                            background-color: #B950E3;
-                        }
-                    }
-                }
-
-            }
-            &.st5 {
-                a {
-                    &:hover {
-                        color: #3D96FF;
-                    }
-                    &.active {
-                        color: #3D96FF;
-                        &:after {
-                            background-color: #3D96FF;
-                        }
-                    }
-                }
-
-            }
-            &.st6 {
-                a {
-                    &:hover {
-                        color: #3D96FF;
-                    }
-                    &.active {
-                        color: #3D96FF;
-                        &:after {
-                            background-color: #3D96FF;
-                        }
-                    }
-                }
-
-            }
-        }
-    }
-
-    .modal-dialog {
-        width: 100%;
-        height: 100%;
-        .modal-content {
-            width: 540px;
-            min-height: 467px;
-            border-radius: 16px;
-            border: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-50%);
-            background-color: #F9FBFF;
-            .logo {
-                text-align: center;
-                margin-top: 30px;
-                margin-bottom: 30px;
-                img {
-                    width: 172px;
-                }
-            }
-            label {
-                display: block;
-                width: 100%;
-                text-align: center;
-                position: relative;
-                .t {
-                    width: 440px;
-                    height: 50px;
-                    border-radius: 25px;
-                    outline: none;
-                    border: none;
-                    padding-left: 16px;
-                    box-shadow: rgba(0, 0, 0, 0.8) 0 0 6px -3px;
-                    margin-bottom: 20px;
-                    &::placeholder {
-                        color: #999999;
-                        font-size: 14px;
-                    }
-                }
-                .glyphicon {
-                    font-size: 18px;
-                    position: absolute;
-                    top: 15px;
-                    right: 70px;
-                    cursor: pointer;
-                    color: #CCCCCC;
-                    &.open {
-                        color: rgb(53, 53, 53);
-                    }
-                }
-            }
-            .ask {
-                text-align: center;
-                color: #808080;
-                font-size: 14px;
-                .d {
-                    color: #3D96FF;
-                    cursor: pointer;
-                }
-            }
-            .third {
-                padding-left: 60px;
-                padding-right: 60px;
-                border-top: 1px dashed rgba(64, 147, 255, 0.42);
-                padding-top: 17px;
-                margin-top: 18px;
-                .t-info {
+    .nav-root {
+        .nav-content {
+            width: 100%;
+            height: 93px;
+            background-color: #fff;
+            box-shadow: rgba(0, 0, 0, 0.7) 0 0 10px 0;
+            position: fixed;
+            top: 0;
+            text-align: center;
+            z-index: 999;
+            .nav {
+                > a {
+                    display: inline-block;
                     font-size: 12px;
-                    font-weight: 300;
-                    color: #3D96FF;
-                }
-                .ct {
-                    display: flex;
-                    margin-top: 20px;
-                    a {
-                        flex: 1;
-                        font-size: 12px;
-                        color: #333333;
-                        font-weight: 300;
-                        img {
-                            height: 15px;
+                    line-height: 93px;
+                    width: 80px;
+                    color: #717171;
+                    position: relative;
+                    &:hover {
+                        color: #3D96FF;
+                        text-decoration: none;
+                    }
+                    &:focus {
+                        text-decoration: none;
+                    }
+                    &.active {
+                        color: #3D96FF;
+                        &:after {
+                            content: '';
+                            width: 24px;
+                            height: 3px;
+                            background-color: #3D96FF;
+                            border-radius: 1.5px;
+                            position: absolute;
+                            bottom: 0;
+                            left: 50%;
+                            transform: translateX(-50%);
+                        }
+                    }
+                    &.user {
+                        color: #3D96FF;
+                        &:hover {
+                            color: #3D96FF !important;
                         }
                     }
                 }
+                .logo {
+                    img {
+                        width: 78px;
+                    }
+                }
+                &.st1 {
+                    a {
+                        &:hover {
+                            color: #3D96FF;
+                        }
+                        &.active {
+                            &:after {
+                                background-color: #3D96FF;
+                            }
+                        }
+                    }
+                }
+                &.st2 {
+                    a {
+                        &:hover {
+                            color: #FF65A2;
+                        }
+                        &.active {
+                            color: #FF65A2;
+                            &:after {
+                                background-color: #FF65A2;
+                            }
+                        }
+                    }
+
+                }
+                &.st3 {
+                    a {
+                        &:hover {
+                            color: #FF883D;
+                        }
+                        &.active {
+                            color: #FF883D;
+                            &:after {
+                                background-color: #FF883D;
+                            }
+                        }
+                    }
+
+                }
+                &.st4 {
+                    a {
+                        &:hover {
+                            color: #B950E3;
+                        }
+                        &.active {
+                            color: #B950E3;
+                            &:after {
+                                background-color: #B950E3;
+                            }
+                        }
+                    }
+
+                }
+                &.st5 {
+                    a {
+                        &:hover {
+                            color: #7ED321;
+                        }
+                        &.active {
+                            color: #7ED321;
+                            &:after {
+                                background-color: #7ED321;
+                            }
+                        }
+                    }
+
+                }
+                &.st6 {
+                    a {
+                        &:hover {
+                            color: #3D96FF;
+                        }
+                        &.active {
+                            color: #3D96FF;
+                            &:after {
+                                background-color: #3D96FF;
+                            }
+                        }
+                    }
+
+                }
+
             }
-            .sub {
-                margin: 24px auto;
-                width: 440px;
-                height: 67px;
-                background-image: url(../assets/img/subBtn.png);
-                -webkit-background-size: cover;
-                background-size: cover;
-                cursor: pointer;
-                font-size: 18px;
-                color: #fff;
-                line-height: 73px;
-                text-align: center;
+            .w930 {
+                position: relative;
+                .userMod {
+                    padding: 9px 14px;
+                    width: 180px;
+                    box-shadow: rgba(0, 0, 0, .2) 0 2px 6px;
+                    position: absolute;
+                    z-index: 1;
+                    background-color: #fff;
+                    border-radius: 8px;
+                    top: 113px;
+                    right: 117px;
+                    display: none;
+                    transition: all 1s linear;
+                    opacity: 0;
+                    a {
+                        display: block;
+                        font-size: 12px;
+                        color: #717171;
+                        padding: 9px 6px;
+                        width: 100%;
+                        border-bottom: 0.5px solid #D9E2FF;
+                        line-height: 17px !important;
+                        &:hover {
+                            color: #3D96FF;
+                        }
+                        &:last-child {
+                            border-bottom: none;
+                            font-weight: 500;
+                        }
+
+                    }
+                    &:after {
+                        width: 10px;
+                        height: 10px;
+                        content: "";
+                        display: block;
+                        position: absolute;
+                        top: -1px;
+                        transform: rotate(45deg) translateX(-50%);
+                        z-index: -1;
+                        background-color: #fff;
+                        left: 48%;
+                        box-shadow: rgba(0, 0, 0, .2) 0 2px 6px;
+                    }
+                    &:before {
+                        width: 30px;
+                        height: 8px;
+                        content: "";
+                        display: block;
+                        position: absolute;
+                        top: 0px;
+                        z-index: 3;
+                        background-color: #fff;
+                        left: 43%;
+                    }
+                    &.show {
+                        display: block;
+                        opacity: 1;
+                    }
+                }
+
             }
-            .close {
+
+        }
+        .modal-dialog-l {
+            width: 100%;
+            height: 100%;
+            .modal-content {
+                width: 540px;
+                min-height: 467px;
+                border-radius: 16px;
+                border: none;
                 position: absolute;
-                top: 10px;
-                right: 25px;
-                font-size: 30px;
+                top: 50%;
+                left: 50%;
+                transform: translateX(-50%) translateY(-50%);
+                background-color: #F9FBFF;
+                .logo {
+                    text-align: center;
+                    margin-top: 30px;
+                    margin-bottom: 30px;
+                    img {
+                        width: 172px;
+                    }
+                }
+                label {
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                    position: relative;
+                    .t {
+                        width: 440px;
+                        height: 50px;
+                        border-radius: 25px;
+                        outline: none;
+                        border: none;
+                        padding-left: 16px;
+                        box-shadow: rgba(0, 0, 0, 0.8) 0 0 6px -3px;
+                        margin-bottom: 20px;
+                        &::placeholder {
+                            color: #999999;
+                            font-size: 14px;
+                        }
+                    }
+                    .glyphicon {
+                        font-size: 18px;
+                        position: absolute;
+                        top: 15px;
+                        right: 70px;
+                        cursor: pointer;
+                        color: #CCCCCC;
+                        &.open {
+                            color: rgb(53, 53, 53);
+                        }
+                    }
+                }
+                .ask {
+                    text-align: center;
+                    color: #808080;
+                    font-size: 14px;
+                    .d {
+                        color: #3D96FF;
+                        cursor: pointer;
+                    }
+                }
+                .third {
+                    padding-left: 60px;
+                    padding-right: 60px;
+                    border-top: 1px dashed rgba(64, 147, 255, 0.42);
+                    padding-top: 17px;
+                    margin-top: 18px;
+                    .t-info {
+                        font-size: 12px;
+                        font-weight: 300;
+                        color: #3D96FF;
+                    }
+                    .ct {
+                        display: flex;
+                        margin-top: 20px;
+                        a {
+                            flex: 1;
+                            font-size: 12px;
+                            color: #333333;
+                            font-weight: 300;
+                            img {
+                                height: 15px;
+                            }
+                        }
+                    }
+                }
+                .sub {
+                    margin: 24px auto;
+                    width: 440px;
+                    height: 67px;
+                    background-image: url(../assets/img/subBtn.png);
+                    -webkit-background-size: cover;
+                    background-size: cover;
+                    cursor: pointer;
+                    font-size: 18px;
+                    color: #fff;
+                    line-height: 73px;
+                    text-align: center;
+                }
+                .close {
+                    position: absolute;
+                    top: 10px;
+                    right: 25px;
+                    font-size: 30px;
+                }
             }
         }
     }
 </style>
 
 <template>
-    <div>
+    <div class="nav-root">
         <div class="nav-content">
             <div v-bind:class="['nav','w930','st'+index]">
-                <a href="#/home" @click="navCl(1)" v-bind:class="{active:index==1}">Home</a>
+                <a href="#/en/home" @click="navCl(1)" v-bind:class="{active:index==1}">Home</a>
                 <a href="#" @click="navCl(2)" v-bind:class="{active:index==2}">Market</a>
                 <a href="#" @click="navCl(3)" v-bind:class="{active:index==3}">Exchange</a>
                 <a href="#" @click="navCl(4)" v-bind:class="{active:index==4}">Q&A</a>
                 <a href="#" class=" logo"><img src="../assets/img/logo.png"></a>
-                <a href="#" @click="navCl(5)" v-bind:class="{active:index==5}">App</a>
+                <a href="#/en/app " @click="navCl(5)" v-bind:class="{active:index==5}">App</a>
                 <a href="#" @click="navCl(6)" v-bind:class="{active:index==6}">About us</a>
-                <a href="#" data-toggle="modal" data-target="#myModal">Log in</a>
-                <a href="#">中文</a>
+                <a href="#" v-show="!isLogin" data-toggle="modal" data-target="#myModal">Log in</a>
+                <a href="javascript:;" @click="showUM" v-show="isLogin" v-bind:class="['user']">Yang</a>
+                <a href=" #/cn/home">中文</a>
+
+                <div v-bind:class="['userMod',{'show':isShowUserMod}]">
+                    <a @click="showUM" href="#/en/wallet">My Wallet</a>
+                    <a @click="showUM" href="#/en/record">Trading Record</a>
+                    <a @click="showUM" href="#/en/my_project">My Projects</a>
+                    <a @click="showUM" href="#">Call Center</a>
+                    <a @click="showUM" href="#">Setting</a>
+                    <a @click="showUM" href="#">Log out</a>
+                </div>
             </div>
         </div>
-
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-l" role="document">
                 <div class="modal-content">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
@@ -266,7 +347,8 @@
                             <input autocomplete="off" class="t" type="text" placeholder="请输入用户名">
                         </label>
                         <label>
-                            <input autocomplete="off" class="t" v-bind:type="showPw?'text':'password'" placeholder="请输入密码">
+                            <input autocomplete="off" class="t" v-bind:type="showPw?'text':'password'"
+                                   placeholder="请输入密码">
                             <i v-bind:class="['glyphicon','glyphicon-eye-open',{'open':showPw}]" @click="showPwd"></i>
                         </label>
                         <input class="hide" type="submit">
@@ -311,6 +393,8 @@
                 index: 1,
                 showPw: false,
                 type: 1,    // 1-登录页面  2-注册页面
+                isLogin: true,
+                isShowUserMod: false
             }
         },
         methods: {
@@ -339,7 +423,14 @@
                     alert('注册')
                 }
                 return false;
-            }
+            },
+            showUM: function () {
+                if (this.isShowUserMod) {
+                    this.isShowUserMod = false;
+                } else {
+                    this.isShowUserMod = true;
+                }
+            },
 
         },
         mounted: function () {
@@ -347,7 +438,10 @@
                 // 可以在此为所欲为
                 //对DOM的操作放这
                 //console.log(this);
-
+                this.index = this.pushIndex;
+                $('.userMod').blur(_ => {
+                    console.log(1);
+                })
             })
         },
         created() {
@@ -369,6 +463,7 @@
             //    handler: function (val, oldVal) { /* ... */ },
             //    deep: true
             // }
-        }
+        },
+        props: ['pushIndex']
     }
 </script>
