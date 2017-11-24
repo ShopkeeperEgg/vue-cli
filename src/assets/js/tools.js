@@ -32,6 +32,11 @@ if (dev) {
 }
 
 
+let timestamp = Date.now();
+let app_id = '48872373383';
+let app_secret = 'Her*HofarjHfj*^)%afjer^%893';
+let sign = hex_md5(timestamp + app_secret);
+
 export default {
     // cookie相关
     getCookie(cname) {
@@ -73,7 +78,6 @@ export default {
         }
         return reg;
     },
-
     apiUrl() {
         let reg;
         if (apiServer.PORT) {
@@ -86,8 +90,11 @@ export default {
 
     // ajax请求
     get(url, data, successCb, errorCb, bfCb) {
+        data.app_id = app_id;
+        data.timestamp = timestamp;
+        data.sign = sign;
         Vue.http({
-            url: '/api' + url,
+            url: '/v1/time/' + url,
             params: data,
             method: 'GET',
             credientials: true,
@@ -116,8 +123,11 @@ export default {
         // })
     },
     post(url, data, successCb, errorCb, bfCb) {
+        data.app_id = app_id;
+        data.timestamp = timestamp;
+        data.sign = sign;
         Vue.http({
-            url: "/api" + url,
+            url: "/v1/time/" + url,
             params: data,
             method: 'POST',
             credientials: true,
@@ -145,9 +155,81 @@ export default {
         //     }
         // })
     },
+
+    // 带登录状态的ajax请求
+    _get(url, data, successCb, errorCb, bfCb) {
+        data.app_id = app_id;
+        data.timestamp = timestamp;
+        data.access_token = this.getCookie('token');
+        data.sign = hex_md5(timestamp + app_secret + this.getCookie('secret'));
+        Vue.http({
+            url: '/v1/time/' + url,
+            params: data,
+            method: 'GET',
+            credientials: true,
+            before: function () {
+                bfCb && bfCb();
+            }
+        }).then(function (data) {
+            successCb && successCb(data);
+        }, function (data) {
+            errorCb && errorCb(data);
+        });
+        // $.ajax({
+        //     url: this.apiUrl() + url,
+        //     type: 'get',
+        //     data: data,
+        //     dataType: 'json',
+        //     success(data) {
+        //         successCb && successCb(data);
+        //     },
+        //     error(data) {
+        //         errorCb && errorCb(data)
+        //     },
+        //     beforeSend() {
+        //         bfCb && bfCb()
+        //     }
+        // })
+    },
+    _post(url, data, successCb, errorCb, bfCb) {
+        data.app_id = app_id;
+        data.timestamp = timestamp;
+        data.access_token = this.getCookie('token') || '我的天哪噜';
+        data.sign = hex_md5(timestamp + app_secret + this.getCookie('secret'));
+        Vue.http({
+            url: "/v1/time/" + url,
+            params: data,
+            method: 'POST',
+            credientials: true,
+            before: function () {
+                bfCb && bfCb();
+            }
+        }).then(function (data) {
+            successCb(data);
+        }, function (data) {
+            errorCb && errorCb(data);
+        });
+        // $.ajax({
+        //     url: this.apiUrl() + url,
+        //     type: 'post',
+        //     data: data,
+        //     dataType: 'json',
+        //     success(data) {
+        //         successCb && successCb(data);
+        //     },
+        //     error(data) {
+        //         errorCb && errorCb(data)
+        //     },
+        //     beforeSend() {
+        //         bfCb && bfCb()
+        //     }
+        // })
+    },
+
+
     jsonp(url, data, successCb, errorCb, bfCb) {
         Vue.http({
-            url: "/api" + url,
+            url: "/v1/time/" + url,
             params: data,
             method: 'JSONP',
             credientials: true,
@@ -174,23 +256,6 @@ export default {
         //         bfCb && bfCb()
         //     }
         // })
-    },
-    ajax(url, type, data, successCb, errorCb, bfCb) {
-        $.ajax({
-            url,
-            type,
-            data: data,
-            dataType: 'json',
-            success(data) {
-                successCb && successCb(data);
-            },
-            error(data) {
-                errorCb && errorCb(data);
-            },
-            beforeSend() {
-                bfCb && bfCb();
-            }
-        })
     },
     ajsonp(url, type, data, successCb, errorCb, bfCb) {
         $.ajax({
@@ -224,6 +289,7 @@ export default {
     },
     search() {
         let arr = (location.search || "").replace(/^\?/, '').split("&");
+        console.log(arr);
         let params = {};
         for (let i = 0; i < arr.length; i++) {
             let data = arr[i].split("=");

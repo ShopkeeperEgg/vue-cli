@@ -1,4 +1,4 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
     body {
         background-color: #f9fbff;
     }
@@ -37,8 +37,9 @@
             background-color: #fff;
             box-shadow: rgba(0, 0, 0, 0.1) 0 2px 6px;
             min-height: 500px;
-            padding-bottom: 100px;
+            padding-bottom: 50px;
             margin-bottom: 140px;
+            position: relative;
             .title {
                 width: 100%;
                 height: 46px;
@@ -104,7 +105,7 @@
                         }
                     }
                     .b {
-                        margin-top: 10px;
+                        margin-top: 6px;
                         padding-right: 25px;
                         overflow: hidden;
                         white-space: nowrap;
@@ -133,7 +134,7 @@
         <!--Do it!-->
         <div class="title">
             <div class="w800">
-                <a href="/#/en/wallet">我的钱包</a><span>></span><i>历史记录</i>
+                <a href="#/en/wallet">我的钱包</a><span>></span><i>历史记录</i>
             </div>
         </div>
         <div class="w800">
@@ -146,128 +147,45 @@
                 </div>
                 <div class="money">
                     <div class="cz" v-show="recordIndex===1">
-                        <div class="card">
+                        <div v-if="rechargeArr.length" class="card" v-for="item in rechargeArr">
                             <div class="t clearfix">
                                 <div class="i1">
-                                    <p>100 ETH</p>
-                                    <span>2017-10-10 18:36:04</span>
+                                    <p>{{item.value}} {{item.trade_coin}}</p>
+                                    <span>{{item.created_at}}</span>
                                 </div>
                                 <div class="i2">
-                                    <div>待确认 (<i>3</i>/30）</div>
-                                    <div class="hide">已完成</div>
+                                    <div v-if="item.status===1">待确认 (<i>{{item.confirms}}</i>/{{item.confirms_need}}）
+                                    </div>
+                                    <div v-if="item.status===2">已完成</div>
+                                    <div v-if="item.status===3">失败</div>
                                 </div>
                             </div>
                             <div class="b">
-                                <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
+                                <span>地址</span>{{item.toAddr}}
                             </div>
                         </div>
-                        <div class="card">
-                            <div class="t clearfix">
-                                <div class="i1">
-                                    <p>100 ETH</p>
-                                    <span>2017-10-10 18:36:04</span>
-                                </div>
-                                <div class="i2">
-                                    <div>待确认 (<i>3</i>/30）</div>
-                                    <div class="hide">已完成</div>
-                                </div>
-                            </div>
-                            <div class="b">
-                                <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="t clearfix">
-                                <div class="i1">
-                                    <p>100 ETH</p>
-                                    <span>2017-10-10 18:36:04</span>
-                                </div>
-                                <div class="i2">
-                                    <div>待确认 (<i>3</i>/30）</div>
-                                    <div class="hide">已完成</div>
-                                </div>
-                            </div>
-                            <div class="b">
-                                <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="t clearfix">
-                                <div class="i1">
-                                    <p>100 ETH</p>
-                                    <span>2017-10-10 18:36:04</span>
-                                </div>
-                                <div class="i2">
-                                    <div class="hide">待确认 (<i>3</i>/30）</div>
-                                    <div class="">已完成</div>
-                                </div>
-                            </div>
-                            <div class="b">
-                                <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                            </div>
-                        </div>
+                        <none v-if="!rechargeArr.length"></none>
                     </div>
                     <div class="tx" v-show="recordIndex===2">
-                        <div class="card">
+                        <div v-if="withdrawArr.length" class="card" v-for="item in withdrawArr">
                             <div class="t clearfix">
                                 <div class="i1">
-                                    <p>200 ETH</p>
-                                    <span>2017-10-10 18:36:04</span>
+                                    <p>{{item.value}} {{item.trade_coin}}</p>
+                                    <span>{{item.created_at}}</span>
                                 </div>
                                 <div class="i2">
-                                    <div>待确认 (<i>3</i>/30）</div>
-                                    <div class="hide">已完成</div>
+                                    <div v-if="item.status===0">未处理</div>
+                                    <div v-if="item.status===1">待确认 (<i>{{item.confirms}}</i>/{{item.confirms_need}}）
+                                    </div>
+                                    <div v-if="item.status===2">已完成</div>
+                                    <div v-if="item.status===3">失败</div>
                                 </div>
                             </div>
                             <div class="b">
-                                <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
+                                <span>地址</span>{{item.toAddr}}
                             </div>
                         </div>
-                        <div class="card">
-                            <div class="t clearfix">
-                                <div class="i1">
-                                    <p>100 ETH</p>
-                                    <span>2017-10-10 18:36:04</span>
-                                </div>
-                                <div class="i2">
-                                    <div>待确认 (<i>3</i>/30）</div>
-                                    <div class="hide">已完成</div>
-                                </div>
-                            </div>
-                            <div class="b">
-                                <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="t clearfix">
-                                <div class="i1">
-                                    <p>100 ETH</p>
-                                    <span>2017-10-10 18:36:04</span>
-                                </div>
-                                <div class="i2">
-                                    <div>待确认 (<i>3</i>/30）</div>
-                                    <div class="hide">已完成</div>
-                                </div>
-                            </div>
-                            <div class="b">
-                                <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="t clearfix">
-                                <div class="i1">
-                                    <p>100 ETH</p>
-                                    <span>2017-10-10 18:36:04</span>
-                                </div>
-                                <div class="i2">
-                                    <div class="hide">待确认 (<i>3</i>/30）</div>
-                                    <div class="">已完成</div>
-                                </div>
-                            </div>
-                            <div class="b">
-                                <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                            </div>
-                        </div>
+                        <none v-if="!withdrawArr.length"></none>
                     </div>
 
                 </div>
@@ -278,7 +196,8 @@
 </template>
 
 <script>
-    //    import t from '../assets/js/tools';
+    import t from '../../assets/js/tools';
+    import none from '../none'
 
     export default {
         // 没啥大用处
@@ -286,6 +205,8 @@
         data() {
             return {
                 recordIndex: 1,
+                rechargeArr: [],
+                withdrawArr: []
             }
         },
         methods: {
@@ -301,11 +222,18 @@
             })
         },
         created() {
-
+            var _this = this;
+            t._get('users/coin/recharge/record', {limit: 100}, function (data) {
+                _this.rechargeArr = data.body.data.list;
+            })
+            t._get('users/coin/withdraw/record', {limit: 100}, function (data) {
+                _this.withdrawArr = data.body.data.list;
+                console.log(_this.withdrawArr);
+            })
         },
         components: {
             // 引入的组件写在这里
-
+            none
         },
         watch: {
             // 监听数据变化

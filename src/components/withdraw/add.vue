@@ -1,10 +1,10 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
     body {
-        background-color: #f9fbff;
     }
 
     .wall2 {
-        margin-bottom: 150px;
+        background-color: #f9fbff;
+        PADDING-bottom: 150px;
         > .title {
             width: 100%;
             background-color: #FAFAFA;
@@ -33,73 +33,6 @@
                 }
             }
         }
-        .address {
-            margin-bottom: 20px;
-            p {
-                font-size: 12px;
-                color: #717171;
-                letter-spacing: 0.86px;
-                margin-bottom: 8px;
-            }
-            input {
-                width: 100%;
-                height: 46px;
-                border: none;
-                padding-left: 20px;
-                padding-right: 52px;
-                &::placeholder {
-                    font-size: 12px;
-                    color: #9B9B9B;
-                }
-            }
-            .a {
-                position: relative;
-            }
-            .a2 {
-                input {
-                    width: 448px;
-                }
-                i {
-                    right: -8px;
-                }
-            }
-            i {
-                color: #3D96FF;
-                cursor: pointer;
-                font-size: 12px;
-                letter-spacing: 0.86px;
-                position: absolute;
-                z-index: 1;
-                right: 20px;
-                top: 50%;
-                transform: translateY(-50%);
-                padding: 10px;
-            }
-        }
-        .d {
-            color: #717171;
-            font-size: 12px;
-            margin-bottom: 8px;
-            .d1 {
-                float: left;
-            }
-            .d2 {
-                float: right;
-                text-align: right;
-            }
-        }
-        .withdrawBtn {
-            width: 500px;
-            height: 40px;
-            border-radius: 2px;
-            color: white;
-            background-color: #3D96FF;
-            display: block;
-            text-align: center;
-            line-height: 40px;
-            font-size: 14px;
-            margin-top: 40px;
-        }
     }
 
 </style>
@@ -112,32 +45,12 @@
                 <a href="/#/en/wallet">我的钱包</a><span>></span><i>添加地址</i>
             </div>
         </div>
-        <div class="w500">
-            <div class="address">
-                <p>备注名称</p>
-                <div class="a a1">
-                    <input type="text"/>
-                    <i class="hide glyphicon glyphicon-triangle-bottom"></i>
-                </div>
-            </div>
-            <div class="address">
-                <p>地址</p>
-                <div class="a a2">
-                    <input type="text"/>
-                    <i class="">
-                        <img src="../../assets/img/little_ewm.png" alt="" width="36">
-                    </i>
-                </div>
-            </div>
-            <a @click="add" href="javascript:;" class="withdrawBtn">
-                确认添加
-            </a>
-        </div>
+        <add-area :status="'withdraw'"></add-area>
     </div>
 </template>
 
 <script>
-    //    import t from '../assets/js/tools';
+    import addArea from './add_area';
 
     export default {
         // 没啥大用处
@@ -150,10 +63,6 @@
             }
         },
         methods: {
-            // 确认添加
-            add: function () {
-                location.href = '/#/en/withdraw'
-            }
         },
         destroyed: function () {
 
@@ -171,7 +80,7 @@
         },
         components: {
             // 引入的组件写在这里
-
+            addArea
         },
         watch: {
             // 监听数据变化

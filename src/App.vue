@@ -1,5 +1,7 @@
 <style lang="less">
-
+    #app {
+        /*margin-bottom: 142px;*/
+    }
 </style>
 
 <template>
@@ -14,6 +16,10 @@
     import navBar from './components/nav.vue';
     import bottom from './components/bottom.vue';
 
+    //    import echarts from 'echarts';
+
+    import t from './assets/js/tools';
+
     export default {
         // 没啥大用处
         name: 'app',
@@ -27,7 +33,14 @@
 
         },
         created() {
-            // 可以在此为所欲为
+
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                window.onhashchange = function () {
+                    $('body,html').animate({scrollTop: 0}, 0);
+                }
+            })
         },
         components: {
             // 引入的组件写在这里

@@ -1,4 +1,4 @@
-<style scope lang="less">
+<style lang="less">
     .app-download {
         background-image: url(../../assets/img/app-download.jpg);
         width: 100%;

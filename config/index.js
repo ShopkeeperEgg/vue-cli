@@ -32,11 +32,11 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             // 代理所有的以 /api 开头的请求到 http://jsonplaceholder.typicode.com
-            '/api': {
-                target: 'http://api.jisuapi.com',
+            '/v1/time': {
+                target: 'http://dev-time-server.famely.com',
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/api': ''
+                    '^/v1/time': '/v1/time'
                 }
             }
         },

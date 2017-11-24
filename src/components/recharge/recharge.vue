@@ -1,4 +1,4 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
     body {
         background-color: #f9fbff;
     }
@@ -135,18 +135,18 @@
             </div>
             <div v-show="index===1">
                 <div class="ewm">
-                    <img src="../../assets/img/temp/ewm.jpg" alt="">
+                    <img v-bind:src="coinData_btc.qrcode_url" alt="">
                 </div>
                 <div id="e_address_1" class="address">
-                    0xf19b8d85c8d8154d1c41eb243d9ae98dc6cbdc6cbdc6cbdc6cbce71
+                    {{coinData_btc.address}}
                 </div>
             </div>
             <div v-show="index===2">
                 <div class="ewm">
-                    <img src="../../assets/img/temp/ewm.jpg" alt="">
+                    <img v-bind:src="coinData_eth.qrcode_url" alt="">
                 </div>
                 <div id="e_address_2" class="address">
-                    0xasdasdasdasdasdasdasdasdas
+                    {{coinData_eth.address}}
                 </div>
             </div>
             <a class="bb" @click="copy" href="javascript:;">复制地址</a>
@@ -157,7 +157,7 @@
 </template>
 
 <script>
-    //    import t from '../assets/js/tools';
+    import t from '../../assets/js/tools';
 
     export default {
         // 没啥大用处
@@ -165,7 +165,9 @@
         data() {
             return {
                 index: 1,
-                ani: false
+                ani: false,
+                coinData_btc: {},
+                coinData_eth: {},
             }
         },
         methods: {
@@ -201,7 +203,13 @@
             })
         },
         created() {
-
+            var _this = this;
+            t._get('users/coin/recharge/addr', {coin_type: 'BTC'}, function (data) {
+                _this.coinData_btc = data.body.data;
+            })
+            t._get('users/coin/recharge/addr', {coin_type: 'ETH'}, function (data) {
+                _this.coinData_eth = data.body.data;
+            })
         },
         components: {
             // 引入的组件写在这里

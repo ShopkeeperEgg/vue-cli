@@ -1,4 +1,4 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
     .row {
         width: 100%;
         .form-label {

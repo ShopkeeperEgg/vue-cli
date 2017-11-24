@@ -1,7 +1,7 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
     .groom {
         background-color: #F9FBFF;
-
+        min-height: 300px;
     }
 
     .content {
@@ -10,7 +10,8 @@
         .card {
             width: 300px;
             height: 448px;
-            box-shadow: rgba(0, 0, 0, .4) 0 0 4px;
+            box-shadow: rgba(0, 0, 0, .1) 0 0 10px;
+            transition: all .5s;
             border-radius: 12px;
             overflow: hidden;
             float: left;
@@ -27,9 +28,11 @@
                 height: 100%;
                 .gameImg {
                     height: 190px;
+                    width: 100%;
                     overflow: hidden;
                     img {
                         width: 100%;
+                        height: 100%;
                     }
                 }
                 .title {
@@ -44,6 +47,7 @@
                     font-size: 12px;
                     font-weight: 200;
                     color: #4A4A4A;
+                    height: 52px;
                 }
                 .progress {
                     width: 244px;
@@ -87,6 +91,11 @@
                     .st {
                         margin-left: 14px;
                         float: left;
+                        max-width: 45%;
+                        min-width: 40%;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        white-space: nowrap;
                         .info1 {
                             font-size: 12px;
                             letter-spacing: 0.86px;
@@ -129,6 +138,9 @@
                     }
                 }
             }
+            &:hover {
+                box-shadow: rgba(0, 0, 0, .2) 0 0 20px;
+            }
         }
 
     }
@@ -138,167 +150,69 @@
     <div class="groom">
         <!--Do it!-->
         <div class="content w930 clearfix">
-            <div class="card">
-                <a href="#/en/detail/10">
+            <div class="card" v-for="item in groomData">
+                <a v-bind:href="'#/en/detail/'+item.product_id">
                     <div class="gameImg">
-                        <img src="../../assets/img/temp/game1.jpg" alt="">
+                        <img v-bind:src="item.web_avatar" alt="">
                     </div>
                     <div class="title">
-                        The Robot 2234
+                        {{item.coin_name + ":" + item.name}}
                     </div>
                     <div class="gameInfo">
-                        You love games and you always wanted to create one of your own? Board Game Creative Kit is what
+                        {{item.short_desc}}
                     </div>
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                             aria-valuemax="100" style="width: 30%;"></div>
+                             aria-valuemax="100" v-bind:style="{width:item.proportion*100+'%'}"></div>
                     </div>
                     <div class="pr clearfix">
                         <div class="st st1">
                             <div class="info1">
-                                1BTC=2000CHTC
+                                1{{item.trade_coin}}={{item.in_price}}{{item.coin_name}}
                             </div>
                             <div class="info2">
-                                2017.12.09
+                                {{item.in_start | moment}}
                             </div>
                         </div>
                         <div class="st st2">
                             <div class="info1">
-                                1BTC=1000CHTC
+                                1{{item.trade_coin}}={{item.out_price}}{{item.coin_name}}
                             </div>
                             <div class="info2">
-                                2018.04.09
+                                {{item.out_start | moment}}
                             </div>
                         </div>
                     </div>
-                    <div class="count">
+                    <div class="count" v-if="item.type<4">
                         <table>
                             <tr>
-                                <td class="num">9789542</td>
-                                <td class="t">预售数量</td>
+                                <td class="t">预售数量：</td>
+                                <td class="num">{{item.in_quantity}}</td>
                             </tr>
                             <tr>
-                                <td class="num">87490</td>
-                                <td class="t">参与人数</td>
+                                <td class="t">参与人数：</td>
+                                <td class="num">{{item.people_count || 0}}</td>
                             </tr>
                         </table>
                     </div>
-                    <div class="currentVal hide">
-                        <div class="info1">
-                            当前价格 (CHTC / BTC)
-                        </div>
-                        <div class="info2">
-                            0.00098566 BTC
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="card">
-                <a href="#/en/detail/11">
-                    <div class="gameImg">
-                        <img src="../../assets/img/temp/game1.jpg" alt="">
-                    </div>
-                    <div class="title">
-                        The Robot 2234
-                    </div>
-                    <div class="gameInfo">
-                        You love games and you always wanted to create one of your own? Board Game Creative Kit is what
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                             aria-valuemax="100" style="width: 70%;"></div>
-                    </div>
-                    <div class="pr clearfix">
-                        <div class="st st1">
-                            <div class="info1">
-                                1BTC=2000CHTC
-                            </div>
-                            <div class="info2">
-                                2017.12.09
-                            </div>
-                        </div>
-                        <div class="st st2">
-                            <div class="info1">
-                                1BTC=1000CHTC
-                            </div>
-                            <div class="info2">
-                                2018.04.09
-                            </div>
-                        </div>
-                    </div>
-                    <div class="count">
+                    <div class="count" v-if="item.type>=4&&item.type<7">
                         <table>
                             <tr>
-                                <td class="num">9789542</td>
-                                <td class="t">预售数量</td>
+                                <td class="t">发售数量：</td>
+                                <td class="num">{{item.in_quantity}}</td>
                             </tr>
                             <tr>
-                                <td class="num">87490</td>
-                                <td class="t">参与人数</td>
+                                <td class="t">投资人数：</td>
+                                <td class="num">{{item.people_count || 0}}</td>
                             </tr>
                         </table>
                     </div>
-                    <div class="currentVal hide">
+                    <div class="currentVal" v-if="item.type===7">
                         <div class="info1">
-                            当前价格 (CHTC / BTC)
+                            当前价格 ({{item.coin_name}}/{{item.trade_coin}})
                         </div>
                         <div class="info2">
-                            0.00098566 BTC
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="card">
-                <a href="#/en/detail/12">
-                    <div class="gameImg">
-                        <img src="../../assets/img/temp/game1.jpg" alt="">
-                    </div>
-                    <div class="title">
-                        The Robot 2234
-                    </div>
-                    <div class="gameInfo">
-                        You love games and you always wanted to create one of your own? Board Game Creative Kit is what
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                             aria-valuemax="100" style="width: 100%;"></div>
-                    </div>
-                    <div class="pr clearfix">
-                        <div class="st st1">
-                            <div class="info1">
-                                1BTC=2000CHTC
-                            </div>
-                            <div class="info2">
-                                2017.12.09
-                            </div>
-                        </div>
-                        <div class="st st2">
-                            <div class="info1">
-                                1BTC=1000CHTC
-                            </div>
-                            <div class="info2">
-                                2018.04.09
-                            </div>
-                        </div>
-                    </div>
-                    <div class="count hide">
-                        <table>
-                            <tr>
-                                <td class="num">9789542</td>
-                                <td class="t">预售数量</td>
-                            </tr>
-                            <tr>
-                                <td class="num">87490</td>
-                                <td class="t">参与人数</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="currentVal">
-                        <div class="info1">
-                            当前价格 (CHTC / BTC)
-                        </div>
-                        <div class="info2">
-                            0.00098566 BTC
+                            0.00098566 {{item.trade_coin}}
                         </div>
                     </div>
                 </a>
@@ -308,14 +222,14 @@
 </template>
 
 <script>
-    //    import t from '../assets/js/tools';
+    import t from '../../assets/js/tools';
 
     export default {
         // 没啥大用处
         name: 'app',
         data() {
             return {
-                title: '我是一个小毛驴'
+                groomData: []
             }
         },
         methods: {
@@ -327,7 +241,10 @@
                 // 可以在此为所欲为
                 //对DOM的操作放这
                 //console.log(this);
-
+                t.get('game/recommend', {}, (data) => {
+                    console.log(data.body.data);
+                    this.groomData = data.body.data;
+                })
             })
         },
         created() {

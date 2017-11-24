@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div v-show="index_w===2">
+    <div class="much">
+        <span>可提余额</span>
+        <p>{{ethData.avail_assets}} ETH</p>
+        <div class="ed">日提现额度： <i>{{ethData.withdraw_day_limit}}</i> ETH</div>
+        <div class="ed">今日已用： <i>{{ethData.day_used}}</i> ETH</div>
+    </div>
+    <div class="address">
+        <p>地址</p>
+        <div class="a a1">
+            <input @input="showExtra=false" type="text" v-model="address_eth"/>
+            <i class="glyphicon glyphicon-triangle-bottom" @click="toggleExtra"></i>
+            <div class="extra" v-if="showExtra">
+                <div v-if="ethData.address.length===0" class="none">
+                    您还没有地址
+                </div>
+                <div v-if="ethData.address.length!==0" class="exist">
+                    <ul>
+                        <li v-for="item in ethData.address"></li>
+                        <li @click="chooseAddress(item.address)">
+                            <span>{{item.remark}}</span>
+                            {{item.address}}
+                        </li>
+                    </ul>
+                </div>
+                <a href="/#/en/add_new" class="use-new">
+                    <img src="../../assets/img/add.png" width="22" alt="">使用新地址
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="address">
+        <p>数量</p>
+        <div class="a a2">
+            <input type="number" v-bind:placeholder="'最小提现数量'+ethData.least" v-model="count_eth"/>
+            <i>全部提现</i>
+        </div>
+    </div>
+    <div class="d clearfix">
+        <div class="d1">手续费：</div>
+        <div class="d2">{{ethData.service_charge}}</div>
+    </div>
+    <div class="d clearfix">
+        <div class="d1">实际到账：</div>
+        <div class="d2">
+            {{count_eth ? (+count_eth * 100000000 - ethData.service_charge * 100000000) / 100000000 : '0.00'
+            }}
+        </div>
+    </div>
+    <a @click="withdraw" href="javascript:;" class="withdrawBtn">
+        提现
+    </a>
+</div>
+</body>
+</html>

@@ -1,5 +1,5 @@
-<style scope lang="less">
-    .groom-project{
+<style scoped="scoped" lang="less">
+    .groom-project {
         > .title {
             width: 100%;
             background-color: #FAFAFA;
@@ -30,10 +30,11 @@
         }
         .content {
             padding-bottom: 80px;
+            min-height: 590px;
+            position: relative;
             .card {
                 width: 300px;
-                height: 340px;
-                box-shadow: rgba(0, 0, 0, .4) 0 0 6px;
+                box-shadow: rgba(0, 0, 0, .1) 0 0 10px;
                 border-radius: 12px;
                 overflow: hidden;
                 float: left;
@@ -44,23 +45,29 @@
                 &:nth-child(n+4) {
                     margin-top: 30px;
                 }
-                a {
-                    display: block;
+                .gameImg {
                     width: 100%;
-                    height: 100%;
-                    .gameImg {
-                        height: 190px;
-                        overflow: hidden;
-                        img {
-                            width: 100%;
-                        }
+                    height: 190px;
+                    overflow: hidden;
+                    img {
+                        height: 100%;
+                        width: 100%;
                     }
-                    .title {
-                        margin: 14px 20px 9px;
-                        font-size: 16px;
-                        font-weight: 500;
-                        letter-spacing: 1.14px;
-                        color: #4A4A4A;
+                }
+                .title {
+                    margin: 14px 20px 0;
+                    font-size: 16px;
+                    font-weight: 500;
+                    letter-spacing: 1.14px;
+                    color: #4A4A4A;
+                }
+                .info {
+                    .line {
+                        width: 100%;
+                        height: 1px;
+                        background-color: #EBF2FF;
+                        margin-top: 8px;
+                        margin-bottom: 8px;
                     }
                     .clearfix {
                         padding: 0 20px;
@@ -72,10 +79,11 @@
                             text-align: right;
                         }
                         &.balance {
-                            margin-bottom: 20px;
+                            margin-top: 10px;
+                            margin-bottom: 15px;
                             font-size: 16px;
-                            color: #3D96FF;
                             font-weight: 500;
+                            color: #FF8000;
                         }
                         &.amount {
                             margin-bottom: 6px;
@@ -84,6 +92,35 @@
                             .fr {
                                 font-weight: 500;
                             }
+                        }
+                    }
+                    .raise-flow {
+                        .fr.raise {
+                            color: #38CEAE;
+                        }
+                        .fr.flow {
+                            color: #F3433C;
+                        }
+                    }
+                }
+                .buy-or-sell {
+                    width: 100%;
+                    padding-left: 16px;
+                    margin-top: 15px;
+                    margin-bottom: 15px;
+                    a {
+                        display: inline-block;
+                        width: 128px;
+                        height: 26px;
+                        line-height: 26px;
+                        color: white;
+                        text-align: center;
+                        background-color: #38CEAE;
+                        border-radius: 4px;
+                        margin-right: 7px;
+                        &:last-child {
+                            margin-right: 0;
+                            background-color: #f3433c;
                         }
                     }
                 }
@@ -103,130 +140,68 @@
             </div>
         </div>
         <div class="content w930 clearfix">
-            <div class="card">
-                <a href="#/en/detail/10">
-                    <div class="gameImg">
-                        <img src="../../assets/img/temp/game1.jpg" alt="">
-                    </div>
-                    <div class="title">
-                        CHTH: Super LELE
-                    </div>
+            <div class="card" v-if="dataList.length" v-for="item in dataList">
+                <div class="gameImg">
+                    <img v-bind:src="item.web_avatar" alt="">
+                </div>
+                <div class="title">
+                    {{item.coin_name}}: {{item.name}}
+                </div>
+                <div class="info">
                     <div class="clearfix balance">
-                        <div class="fl">Balance</div>
-                        <div class="fr">8000CHTH</div>
+                        <div class="fl">总价值</div>
+                        <div class="fr">{{item.coin_worth}} {{item.trade_coin}}</div>
                     </div>
                     <div class="clearfix amount">
-                        <div class="fl">Current Price (BTC)</div>
-                        <div class="fr">0.00232345</div>
+                        <div class="fl">持有 ({{item.coin_name}})</div>
+                        <div class="fr">{{item.coin_have}}</div>
                     </div>
                     <div class="clearfix amount">
-                        <div class="fl">Current Value (BTC)</div>
-                        <div class="fr">18.4</div>
+                        <div class="fl">可用 ({{item.coin_name}})</div>
+                        <div class="fr">{{item.coin_aval}}</div>
                     </div>
-                </a>
+                    <div class="line"></div>
+                    <div class="clearfix amount">
+                        <div class="fl">现价 ({{item.trade_coin}})</div>
+                        <div class="fr">{{item.cur_price}}</div>
+                    </div>
+                    <div class="clearfix amount">
+                        <div class="fl">成本 ({{item.trade_coin}})</div>
+                        <div class="fr">{{item.orig_price}}</div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="clearfix amount raise-flow">
+                        <div class="fl">盈亏 ({{item.trade_coin}})</div>
+                        <div v-if="item.variation.indexOf('+')===0" class="fr raise">{{item.variation}}</div>
+                        <div v-if="item.variation.indexOf('+')!==0" class="fr flow">{{item.variation}}</div>
+                    </div>
+                    <div class="clearfix amount raise-flow">
+                        <div class="fl">百分比 (%)</div>
+                        <div v-if="item.ratio.indexOf('+')===0" class="fr raise">{{item.ratio}}</div>
+                        <div v-if="item.ratio.indexOf('+')!==0" class="fr flow">{{item.ratio}}</div>
+                    </div>
+                </div>
+                <div class="buy-or-sell">
+                    <a href="javascript:;">买入</a>
+                    <a href="javascript:;">卖出</a>
+                </div>
             </div>
-            <div class="card">
-                <a href="#/en/detail/10">
-                    <div class="gameImg">
-                        <img src="../../assets/img/temp/game1.jpg" alt="">
-                    </div>
-                    <div class="title">
-                        CHTH: Super LELE
-                    </div>
-                    <div class="clearfix balance">
-                        <div class="fl">Balance</div>
-                        <div class="fr">8000CHTH</div>
-                    </div>
-                    <div class="clearfix amount">
-                        <div class="fl">Current Price (BTC)</div>
-                        <div class="fr">0.00232345</div>
-                    </div>
-                    <div class="clearfix amount">
-                        <div class="fl">Current Value (BTC)</div>
-                        <div class="fr">18.4</div>
-                    </div>
-                </a>
-            </div>
-            <div class="card">
-                <a href="#/en/detail/10">
-                    <div class="gameImg">
-                        <img src="../../assets/img/temp/game1.jpg" alt="">
-                    </div>
-                    <div class="title">
-                        CHTH: Super LELE
-                    </div>
-                    <div class="clearfix balance">
-                        <div class="fl">Balance</div>
-                        <div class="fr">8000CHTH</div>
-                    </div>
-                    <div class="clearfix amount">
-                        <div class="fl">Current Price (BTC)</div>
-                        <div class="fr">0.00232345</div>
-                    </div>
-                    <div class="clearfix amount">
-                        <div class="fl">Current Value (BTC)</div>
-                        <div class="fr">18.4</div>
-                    </div>
-                </a>
-            </div>
-            <div class="card">
-                <a href="#/en/detail/10">
-                    <div class="gameImg">
-                        <img src="../../assets/img/temp/game1.jpg" alt="">
-                    </div>
-                    <div class="title">
-                        CHTH: Super LELE
-                    </div>
-                    <div class="clearfix balance">
-                        <div class="fl">Balance</div>
-                        <div class="fr">8000CHTH</div>
-                    </div>
-                    <div class="clearfix amount">
-                        <div class="fl">Current Price (BTC)</div>
-                        <div class="fr">0.00232345</div>
-                    </div>
-                    <div class="clearfix amount">
-                        <div class="fl">Current Value (BTC)</div>
-                        <div class="fr">18.4</div>
-                    </div>
-                </a>
-            </div>
-            <div class="card">
-                <a href="#/en/detail/10">
-                    <div class="gameImg">
-                        <img src="../../assets/img/temp/game1.jpg" alt="">
-                    </div>
-                    <div class="title">
-                        CHTH: Super LELE
-                    </div>
-                    <div class="clearfix balance">
-                        <div class="fl">Balance</div>
-                        <div class="fr">8000CHTH</div>
-                    </div>
-                    <div class="clearfix amount">
-                        <div class="fl">Current Price (BTC)</div>
-                        <div class="fr">0.00232345</div>
-                    </div>
-                    <div class="clearfix amount">
-                        <div class="fl">Current Value (BTC)</div>
-                        <div class="fr">18.4</div>
-                    </div>
-                </a>
-            </div>
-
+            <none v-if="!dataList.length"></none>
         </div>
     </div>
 </template>
 
 <script>
-    //    import t from '../assets/js/tools';
+    import t from '../../assets/js/tools';
+    import none from '../none'
 
     export default {
         // 没啥大用处
         name: 'app',
         data() {
             return {
-                title: '我是一个小毛驴'
+                title: '我是一个小毛驴',
+                dataList: []
             }
         },
         methods: {
@@ -242,11 +217,15 @@
             })
         },
         created() {
-
+            var _this = this;
+            t._get('game/product/mygame', {}, function (data) {
+                _this.dataList = data.body.data.list;
+                console.log(_this.dataList);
+            })
         },
         components: {
             // 引入的组件写在这里
-
+            none
         },
         watch: {
             // 监听数据变化

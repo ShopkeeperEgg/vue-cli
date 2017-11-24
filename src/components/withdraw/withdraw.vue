@@ -1,10 +1,7 @@
-<style scope lang="less">
-    body {
-        background-color: #f9fbff;
-    }
-
+<style scoped="scoped" lang="less">
     .walll {
-        margin-bottom: 150px;
+        padding-bottom: 150px;
+        background-color: #f9fbff;
         > .title {
             width: 100%;
             background-color: #FAFAFA;
@@ -90,6 +87,16 @@
                 color: #717171;
                 letter-spacing: 0.86px;
                 margin-bottom: 8px;
+            }
+            .add {
+                width: 100%;
+                height: 46px;
+                border: none;
+                padding-left: 20px;
+                padding-right: 52px;
+                background-color: #fff;
+                line-height: 46px;
+                cursor: pointer;
             }
             input {
                 width: 100%;
@@ -196,6 +203,10 @@
             line-height: 40px;
             font-size: 14px;
             margin-top: 40px;
+            &.dis {
+                background-color: #9B9B9B;
+                cursor: default;
+            }
         }
     }
 
@@ -265,6 +276,46 @@
         }
     }
 
+    .modal-dialog-l {
+        width: 100%;
+        height: 100%;
+        .modal-content {
+            width: 240px;
+            min-height: 160px;
+            border-radius: 16px;
+            border: none;
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            background-color: #F9FBFF;
+            padding-bottom: 26px;
+
+            .tip-man {
+                width: 86px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 30px;
+                img {
+                    width: 100%;
+                    /*height: 100%;*/
+                }
+            }
+            .tips {
+                color: #808080;
+                font-size: 14px;
+                margin-top: 25px;
+                text-align: center;
+            }
+            .close {
+                display: none;
+                position: absolute;
+                top: 10px;
+                right: 25px;
+                font-size: 20px;
+            }
+        }
+    }
 </style>
 
 <template>
@@ -287,32 +338,26 @@
             <div v-show="index_w===1">
                 <div class="much">
                     <span>可提余额</span>
-                    <p>0.00764531 BTC</p>
-                    <div class="ed">日提现额度： <i>2.00000000</i> BTC</div>
-                    <div class="ed">今日已用： <i>0.00000000</i> BTC</div>
+                    <p>{{btcData.avail_assets || '0.00000000'}} BTC</p>
+                    <div class="ed">日提现额度： <i>{{btcData.withdraw_day_limit}}</i> BTC</div>
+                    <div class="ed">今日已用： <i>{{btcData.day_used}}</i> BTC</div>
                 </div>
                 <div class="address">
                     <p>地址</p>
                     <div class="a a1">
-                        <input @input="showExtra=false" type="text" v-model="address"/>
+                        <div class="add" @click="toggleExtra">{{address_btc}}</div>
+                        <!--<input @input="showExtra=false" type="text" v-model="address_btc"/>-->
                         <i class="glyphicon glyphicon-triangle-bottom" @click="toggleExtra"></i>
                         <div class="extra" v-if="showExtra">
-                            <div class="none hide">
+                            <div v-if="btcData.address.length===0" class="none">
                                 您还没有地址
                             </div>
-                            <div class="exist">
+                            <div v-if="btcData.address.length!==0" class="exist">
                                 <ul>
-                                    <li @click="chooseAddress('dhfuegbeblapoeowihu939584jheowi2245hu939584jh455657678767f')">
-                                        <span>JessieZZ</span>
-                                        dhfuegbeblapoeowihu939584jheowi2245hu939584jh455657678767f…
-                                    </li>
-                                    <li @click="chooseAddress('dhfuegbeblapoeowihu939584jheowi2245hu939584jh455657678767f')">
-                                        <span>JessieZZ</span>
-                                        dhfuegbeblapoeowihu939584jheowi2245hu939584jh455657678767f…
-                                    </li>
-                                    <li @click="chooseAddress('dhfuegbeblapoeowihu939584jheowi2245hu939584jh455657678767f')">
-                                        <span>JessieZZ</span>
-                                        dhfuegbeblapoeowihu939584jheowi2245hu939584jh455657678767f…
+                                    <li v-for="item in btcData.address"
+                                        @click="chooseAddress(item.address,item.remark)">
+                                        <span>{{item.remark}}</span>
+                                        {{item.address}}
                                     </li>
                                 </ul>
                             </div>
@@ -325,52 +370,86 @@
                 <div class="address">
                     <p>数量</p>
                     <div class="a a2">
-                        <input type="text" placeholder="最小提现数量0.001"/>
-                        <i>全部提现</i>
+                        <input type="number" v-bind:placeholder="'最小提现数量'+btcData.least" v-model="count_btc"/>
+                        <i @click="count_btc = +btcData.avail_assets > +btcData.withdraw_day_limit?+btcData.withdraw_day_limit:+btcData.avail_assets">全部提现</i>
                     </div>
                 </div>
                 <div class="d clearfix">
                     <div class="d1">手续费：</div>
-                    <div class="d2">0.00</div>
+                    <div class="d2">{{btcData.service_charge}}</div>
                 </div>
                 <div class="d clearfix">
                     <div class="d1">实际到账：</div>
-                    <div class="d2">0.00000000</div>
+                    <div class="d2">
+                        {{count_btc ? Math.floor((+count_btc - btcData.service_charge) * 100000000) / 100000000 : '0.00000000'
+                        }}
+                    </div>
                 </div>
-                <a @click="withdraw" href="javascript:;" class="withdrawBtn">
+                <a v-if="!(count_btc-btcData.service_charge>0&&address_btc)" href="javascript:;"
+                   class="withdrawBtn dis">
+                    提现
+                </a>
+                <a v-if="count_btc-btcData.service_charge>0&&address_btc" @click="withdraw" href="javascript:;"
+                   class="withdrawBtn">
                     提现
                 </a>
             </div>
             <div v-show="index_w===2">
                 <div class="much">
                     <span>可提余额</span>
-                    <p>0.00764531 ETH</p>
-                    <div class="ed">日提现额度： <i>2.00000000</i> ETH</div>
-                    <div class="ed">今日已用： <i>0.00000000</i> ETH</div>
+                    <p>{{ethData.avail_assets + ' ETH'}}</p>
+                    <div class="ed">日提现额度： <i>{{ethData.withdraw_day_limit}}</i> ETH</div>
+                    <div class="ed">今日已用： <i>{{ethData.day_used}}</i> ETH</div>
                 </div>
                 <div class="address">
                     <p>地址</p>
                     <div class="a a1">
-                        <input type="text"/>
-                        <i class="glyphicon glyphicon-triangle-bottom"></i>
+                        <div class="add" @click="toggleExtra">{{address_eth}}</div>
+                        <!--<input @input="showExtra=false" type="text" v-model="address_eth"/>-->
+                        <i class="glyphicon glyphicon-triangle-bottom" @click="toggleExtra"></i>
+                        <div class="extra" v-if="showExtra">
+                            <div v-if="ethData.address.length===0" class="none">
+                                您还没有地址
+                            </div>
+                            <div v-if="ethData.address.length!==0" class="exist">
+                                <ul>
+                                    <li v-for="item in ethData.address"
+                                        @click="chooseAddress(item.address,item.remark)">
+                                        <span>{{item.remark}}</span>
+                                        {{item.address}}
+                                    </li>
+                                </ul>
+                            </div>
+                            <a href="/#/en/add_new" class="use-new">
+                                <img src="../../assets/img/add.png" width="22" alt="">使用新地址
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="address">
                     <p>数量</p>
                     <div class="a a2">
-                        <input type="text" placeholder="最小提现数量0.001"/>
-                        <i>全部提现</i>
+                        <input type="number" v-bind:placeholder="'最小提现数量'+ethData.least" v-model="count_eth"/>
+                        <i @click="count_eth = +ethData.avail_assets > +ethData.withdraw_day_limit?+ethData.withdraw_day_limit:+ethData.avail_assets">全部提现</i>
                     </div>
                 </div>
                 <div class="d clearfix">
                     <div class="d1">手续费：</div>
-                    <div class="d2">0.00</div>
+                    <div class="d2">{{ethData.service_charge}}</div>
                 </div>
                 <div class="d clearfix">
                     <div class="d1">实际到账：</div>
-                    <div class="d2">0.00000000</div>
+                    <div class="d2">
+                        {{count_eth ? Math.floor((+count_eth - ethData.service_charge) * 100000000) / 100000000 : '0.00000000'
+                        }}
+                    </div>
                 </div>
-                <a @click="withdraw" href="javascript:;" class="withdrawBtn">
+                <a v-if="!(count_eth-ethData.service_charge>0&&address_eth)" href="javascript:;"
+                   class="withdrawBtn dis">
+                    提现
+                </a>
+                <a v-if="count_eth-ethData.service_charge>0&&address_eth" @click="withdraw" href="javascript:;"
+                   class="withdrawBtn">
                     提现
                 </a>
             </div>
@@ -383,18 +462,24 @@
                     </div>
                     <div class="d clearfix">
                         <div class="d1">手续费：</div>
-                        <div class="d2">0.01</div>
+                        <div class="d2">{{index_w === 1 ? btcData.service_charge : ethData.service_charge}}</div>
                     </div>
                     <div class="d clearfix">
                         <div class="d1">实际到账：</div>
-                        <div class="d2">0.499</div>
+                        <div class="d2">
+                            {{index_w === 1 ?
+                            count_btc ? Math.floor((+count_btc - btcData.service_charge) * 100000000) / 100000000 : '0.00000000'
+                            :
+                            count_eth ? Math.floor((+count_eth - ethData.service_charge) * 100000000) / 100000000 : '0.00000000'
+                            }}
+                        </div>
                     </div>
                     <div class="dd">
                         <div class="title">
                             地址：
                         </div>
                         <div class="address">
-                            <span>JessieZZ</span>dhfuegbeblapoeowihu939593998959384jh59384jh59384jh59384jh59384jh59384jh59384jh59384jh5986heh384jh8
+                            <span>{{index_w === 1 ? mark_btc : mark_eth}}</span>{{index_w === 1 ? address_btc : address_eth}}
                         </div>
                     </div>
                     <div class="cf-btn clearfix">
@@ -404,11 +489,29 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" v-bind:id="tips.id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-dialog-l" role="document">
+                <div class="modal-content">
+                    <div class="tip-man" v-if="tips.man===1">
+                        <img src="../../assets/img/success_man.png" alt="">
+                    </div>
+                    <div class="tip-man" v-if="tips.man===2">
+                        <img src="../../assets/img/error_man.png" alt="">
+                    </div>
+                    <div class="tips">
+                        {{tips.info}}
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
 <script>
-    //    import t from '../assets/js/tools';
+    import t from '../../assets/js/tools';
 
     export default {
         // 没啥大用处
@@ -416,14 +519,38 @@
         data() {
             return {
                 index_w: 1, // 1-提现BTC 2-提现ETH
-                address: '',
-                showExtra: false
+                address_btc: '',
+                mark_btc: '',
+                address_eth: '',
+                mark_eth: '',
+                count_btc: '',
+                count_eth: '',
+                showExtra: false,
+                btcData: {address: [], least: ''},
+                ethData: {address: [], least: ''},
+                tips: {
+                    id: 'width_tip',
+                    info: '',
+                    man: 2
+                }
             }
         },
         methods: {
+            shMod: function (tips, man, cb) {
+                let _this = this;
+                _this.tips.info = tips;
+                _this.tips.man = man;
+                $('#width_tip').modal('show');
+                setTimeout(function () {
+                    $('#width_tip').modal('hide');
+                }, 1500);
+                setTimeout(function () {
+                    cb && cb();
+                }, 2300);
+            },
             // 点击提现按钮
             withdraw: function () {
-                $('#withdrawModal').modal('show')
+                $('#withdrawModal').modal('show');
             },
             // 确认提现
             confirmWithdraw: function () {
@@ -432,7 +559,40 @@
             },
             // 提现成功
             withdrawSuccess: function () {
-                location.href = '/#/en/withdraw_success';
+                var _this = this;
+                if (_this.index_w === 1) {
+                    t._post('users/coin/withdraw', {
+                        coin_type: 0,
+                        value: _this.count_btc,
+                        address: _this.address_btc
+                    }, function (data) {
+                        if (data.body.error_code) {
+                            if (data.body.error_code === 10627) {
+                                _this.shMod('24小时内提现BTC超限', 2);
+                            } else {
+                                _this.shMod('提现失败，请稍后再试', 2);
+                            }
+                        } else {
+                            location.href = '#/en/withdraw-success'
+                        }
+                    })
+                } else {
+                    t._post('users/coin/withdraw', {
+                        coin_type: 1,
+                        value: _this.count_eth,
+                        address: _this.address_eth
+                    }, function (data) {
+                        if (data.body.error_code) {
+                            if (data.body.error_code === 10627) {
+                                _this.shMod('24小时内提现BTC超限', 2);
+                            } else {
+                                _this.shMod('提现失败，请稍后再试', 2);
+                            }
+                        } else {
+                            location.href = '#/en/withdraw-success'
+                        }
+                    })
+                }
             },
             // 显示或者隐藏额外地址
             toggleExtra: function () {
@@ -442,9 +602,16 @@
                     this.showExtra = true;
                 }
             },
-            chooseAddress: function (address) {
-                this.address = address;
-                this.showExtra = false;
+            chooseAddress: function (address, remark) {
+                if (this.index_w === 1) {
+                    this.address_btc = address;
+                    this.mark_btc = remark;
+                    this.showExtra = false;
+                } else {
+                    this.address_eth = address;
+                    this.mark_eth = remark;
+                    this.showExtra = false;
+                }
             }
         },
         destroyed: function () {
@@ -455,17 +622,46 @@
                 // 可以在此为所欲为
                 //对DOM的操作放这
                 //console.log(this);
-
             })
         },
         created() {
-
+            var _this = this;
+            t._get('users/coin/withdraw/info', {coin_type: 0}, function (data) {
+                _this.btcData = data.body.data;
+            })
+            t._get('users/coin/withdraw/info', {coin_type: 1}, function (data) {
+                _this.ethData = data.body.data;
+            })
         },
         components: {
             // 引入的组件写在这里
 
         },
         watch: {
+            count_btc: function (val) {
+                let valStr = val.toString();
+                let maxAmount = +this.btcData.avail_assets > +this.btcData.withdraw_day_limit ? +this.btcData.withdraw_day_limit : +this.btcData.avail_assets;
+                if (valStr.indexOf('.') !== -1) {
+                    if (valStr.split(".")[1].length > 8) {
+                        this.count_btc = (+valStr).toFixed(8);
+                    }
+                }
+                if (+val > +maxAmount) {
+                    this.count_btc = maxAmount;
+                }
+            },
+            count_eth: function (val) {
+                let valStr = val.toString();
+                let maxAmount = +this.ethData.avail_assets > +this.ethData.withdraw_day_limit ? +this.ethData.withdraw_day_limit : +this.ethData.avail_assets;
+                if (valStr.indexOf('.') !== -1) {
+                    if (valStr.split(".")[1].length > 8) {
+                        this.count_eth = (+valStr).toFixed(8);
+                    }
+                }
+                if (+val > +maxAmount) {
+                    this.count_eth = maxAmount;
+                }
+            }
             // 监听数据变化
             // a: function (val, oldVal) {
             //     console.log('new: %s, old: %s', val, oldVal)

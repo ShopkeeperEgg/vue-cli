@@ -1,5 +1,6 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
     .bottom {
+        position: absolute;
         width: 100%;
         background-color: #4A4A4A;
         .w930 {
@@ -51,9 +52,9 @@
                     <img src="../assets/img/logo2.png" alt="">
                 </div>
                 <div class="cwt">
-                    <a href="#">Contact us</a>
-                    <a href="#">Who we are</a>
-                    <a href="#">Terms of Use</a>
+                    <a href="#">联系我们</a>
+                    <a href="#">关于我们</a>
+                    <a href="#">使用条款</a>
                 </div>
                 <div class="cpr">
                     Copyright ©2017 Game.com. All Rights Reserved.

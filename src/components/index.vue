@@ -1,12 +1,12 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
 
 </style>
 
 <template>
     <div>
         <!--Do it!-->
-        <nav-bar :pushIndex="index"></nav-bar>
-        <router-view v-on:getIndex="getIndex"></router-view>
+        <nav-bar :pushIndex="index" v-on:getStatus="getStatus"></nav-bar>
+        <router-view v-on:getIndex="getIndex" :pushStatus="isLogin"></router-view>
         <bottom></bottom>
     </div>
 </template>
@@ -16,6 +16,7 @@
     import navBar from './nav.vue';
     import bottom from './bottom.vue';
     import home from './home/home';
+    import none from './none';
 
 
     export default {
@@ -24,13 +25,20 @@
         data() {
             return {
                 title: '我是一个小毛驴',
-                index: 0
+                index: 0,
+                isLogin: false
             }
         },
         methods: {
             // 绑定事件的方法
             getIndex: function (index) {
                 this.index = index;
+            },
+            // 显示隐藏小模块
+            togleMud: function (e) {
+            },
+            getStatus: function (status) {
+                this.isLogin = status;
             }
         },
         mounted: function () {
@@ -51,7 +59,7 @@
         },
         components: {
             // 引入的组件写在这里
-            navBar, bottom
+            navBar, bottom, none
         },
         watch: {
             // 监听数据变化

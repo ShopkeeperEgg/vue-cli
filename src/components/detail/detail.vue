@@ -1,4 +1,4 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
     .game-show {
         margin-top: 30px;
         .big-port {
@@ -11,6 +11,7 @@
         .card {
             float: right;
             position: relative;
+            max-width: 270px;
             .game-info {
                 .game-logo {
                     border-radius: 4px;
@@ -103,10 +104,12 @@
 
             }
             .contributors {
+                font-family: 'Montserrat', '微软雅黑';
                 font-size: 16px;
                 color: #3D96FF;
                 margin-top: 20px;
                 margin-bottom: 22px;
+                font-weight: 600;
             }
             .amount {
                 width: 257px;
@@ -135,6 +138,7 @@
                         color: #F3433C;
                         span {
                             margin-left: 18px;
+                            white-space: nowrap;
                             i {
                                 font-size: 12px;
                                 transform: scaleX(0.65);
@@ -146,6 +150,7 @@
                         color: #38CEAE;
                         span {
                             margin-left: 18px;
+                            white-space: nowrap;
                             i {
                                 font-size: 12px;
                                 transform: scaleX(0.65);
@@ -180,7 +185,7 @@
             color: #717171;
             font-weight: 500;
             display: inline-block;
-            width: 144px;
+            width: 137px;
             a {
                 display: inline-block;
                 padding-top: 25px;
@@ -204,14 +209,17 @@
             }
         }
         .a2 {
-            transform: translateX(5px);
+            /*transform: translateX(5px);*/
         }
         .a3 {
-            transform: translateX(-15px);
+            /*transform: translateX(-15px);*/
         }
     }
 
     .main {
+        > div {
+            min-height: 600px;
+        }
         .campaign {
             padding-top: 40px;
             .game-detail {
@@ -225,6 +233,7 @@
                 margin-bottom: 50px;
                 .img {
                     width: 478px;
+                    height: 290px;
                     float: left;
                     img {
                         width: 100%;
@@ -287,6 +296,7 @@
                 }
                 .id-card {
                     display: inline-block;
+                    vertical-align: top;
                     width: 240px;
                     margin-right: 35px;
                     .id {
@@ -424,6 +434,7 @@
                         font-size: 12px;
                         margin-top: 19px;
                         margin-bottom: 45px;
+                        height: 55px;
                     }
                     .ps-img {
                         width: 366px;
@@ -569,84 +580,91 @@
             <div class="card">
                 <div class="game-info clearfix">
                     <div class="game-logo">
-                        <img src="../../assets/img/temp/gameLogo.jpg" alt="">
+                        <img v-bind:src="gameCommonInfo.avatar" alt="">
                     </div>
+                    {{gameCommonInfo.web_avatar}}
                     <div class="game-detail">
-                        <p>CHTC：Super LELE</p>
-                        <span>Total Balance <i>20000个</i> CHTC</span>
+                        <p>{{gameCommonInfo.coin_name}}：{{gameCommonInfo.name}}</p>
+                        <span>当前持有 <i>{{has}}</i> {{gameCommonInfo.coin_name}}</span>
                     </div>
                     <div class="progress">
                         <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                             aria-valuemax="100" style="width: 70%;"></div>
+                             aria-valuemax="100" v-bind:style="{width:gameCommonInfo.proportion*100+'%'}"></div>
                     </div>
                     <div class="pr clearfix">
                         <div class="st st1">
                             <div class="info1">
-                                1BTC=2000CHTC
+                                1{{gameCommonInfo.trade_coin}}={{gameCommonInfo.in_price}}{{gameCommonInfo.coin_name}}
                             </div>
                             <div class="info2">
-                                2017.12.09
+                                {{gameCommonInfo.in_start | moment}}
                             </div>
                         </div>
                         <div class="st st2">
                             <div class="info1">
-                                1BTC=1000CHTC
+                                1{{gameCommonInfo.trade_coin}}={{gameCommonInfo.out_price}}{{gameCommonInfo.coin_name}}
                             </div>
                             <div class="info2">
-                                2018.04.09
+                                {{gameCommonInfo.out_start | moment}}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="contributors">3727367 Contributors</div>
+                <div class="contributors">参与人数：{{gameCommonInfo.people_count}}</div>
                 <div class="amount">
                     <div class="info1">
-                        Pre sale amount:
+                        购买数量：
                     </div>
                     <div class="info2">
-                        9789542 / 100000
+                        {{gameCommonInfo.apply}} / {{gameCommonInfo.in_quantity}}
                     </div>
                     <div class="info3 hide">
                         978%
                     </div>
                     <div class="info3_3">
-                        <div class="raise">
-                            +0.0000345<span>+2.75% <i class="glyphicon glyphicon-triangle-top"></i></span>
+                        <div v-if="isRaise" class="raise">
+                            {{gameCommonInfo.variation}}<span>{{gameCommonInfo.ratio}} <i
+                                class="glyphicon glyphicon-triangle-top"></i></span>
                         </div>
-                        <div class="flow hide">
-                            -0.0000345<span>-2.75% <i class="glyphicon glyphicon-triangle-bottom"></i></span>
+                        <div v-if="!isRaise" class="flow">
+                            {{gameCommonInfo.variation}}<span>{{gameCommonInfo.ratio}} <i
+                                class="glyphicon glyphicon-triangle-bottom"></i></span>
                         </div>
                     </div>
                 </div>
-                <a href="#">Back this project</a>
+                <a href="javascript:;" @click="showDl" v-if="!isLogin">{{gameCommonInfo.type_name}}</a>
+                <a v-if="isLogin&&+gameCommonInfo.type!==7" :href="'#/en/buy/'+pid">{{gameCommonInfo.type_name}}</a>
+                <a v-if="isLogin&&+gameCommonInfo.type===7" href="#/en/exchange">{{gameCommonInfo.type_name}}</a>
             </div>
         </div>
         <div class="tab">
             <span><a v-bind:class="{'active':tabIndex===1}" @click="tabChange(1)"
-                     href="javascript:;">Campaign</a></span>
-            <span><a v-bind:class="['a2',{'active':tabIndex===2}]" @click="tabChange(2)" href="javascript:;">ROI</a></span>
-            <span><a v-bind:class="['a3',{'active':tabIndex===3}]" @click="tabChange(3)" href="javascript:;">Updates</a></span>
-            <span><a v-bind:class="{'active':tabIndex===4}" @click="tabChange(4)" href="javascript:;">FAQ</a></span>
+                     href="javascript:;">项目介绍</a></span>
+            <span><a v-bind:class="['a2',{'active':tabIndex===2}]" @click="tabChange(2)"
+                     href="javascript:;">回报说明</a></span>
+            <span><a v-bind:class="['a3',{'active':tabIndex===3}]" @click="tabChange(3)"
+                     href="javascript:;">项目动态</a></span>
+            <span><a v-bind:class="{'active':tabIndex===4}" @click="tabChange(4)" href="javascript:;">常见问题</a></span>
         </div>
         <div class="main">
             <div v-if="tabIndex===1" class="campaign">
-                <h1 class="game-detail">About this project</h1>
+                <h1 class="game-detail">关于项目</h1>
                 <div class="common clearfix">
                     <div class="img">
-                        <img src="../../assets/img/temp/fox.jpg" alt="">
+                        <img v-bind:src="tab_info_1_intro.pic" alt="">
                         <p class="imgInfo">
-                            Allium Market has been a long time in the making. It started as a family joke about a local void of specialty foods markets, grew into a solid idea.
+                            {{tab_info_1_intro.text}}
                         </p>
                     </div>
                     <div class="contributors">
                         <div class="count">
-                            3727367
+                            {{gameCommonInfo.people_count}}
                         </div>
                         <div class="i1">
-                            Contributors
+                            购买人数
                         </div>
                         <div class="since">
-                            since 2017.10
+                            since {{gameCommonInfo.in_start | moment_detail}}
                         </div>
                     </div>
                 </div>
@@ -657,52 +675,20 @@
                     <h1>
                         Team
                     </h1>
-                    <div class="id-card">
+                    <div class="id-card" v-for="item in team">
                         <div class="id clearfix">
                             <div class="avd">
-                                <img src="../../assets/img/temp/xule.jpg" alt="">
+                                <img v-bind:src="item.avatar" alt="">
                             </div>
                             <div class="info">
-                                <p>徐乐</p>
+                                <p>{{item.name}}</p>
                             </div>
                             <div class="do">
-                                Founder & CEO
+                                {{item.job}}
                             </div>
                         </div>
                         <div class="detail">
-                            Graduated from Tsinghua University, entrepreneur for 17 years. Created China's first online payment platform, YiFuTong, and the first experience-based marketing platform, "ItrybeforeIbuy".
-                        </div>
-                    </div>
-                    <div class="id-card">
-                        <div class="id clearfix">
-                            <div class="avd">
-                                <img src="../../assets/img/temp/xule.jpg" alt="">
-                            </div>
-                            <div class="info">
-                                <p>徐乐</p>
-                            </div>
-                            <div class="do">
-                                Founder & CEO
-                            </div>
-                        </div>
-                        <div class="detail">
-                            Graduated from Tsinghua University, entrepreneur for 17 years. Created China's first online payment platform, YiFuTong, and the first experience-based marketing platform, "ItrybeforeIbuy".
-                        </div>
-                    </div>
-                    <div class="id-card">
-                        <div class="id clearfix">
-                            <div class="avd">
-                                <img src="../../assets/img/temp/xule.jpg" alt="">
-                            </div>
-                            <div class="info">
-                                <p>徐乐</p>
-                            </div>
-                            <div class="do">
-                                Founder & CEO
-                            </div>
-                        </div>
-                        <div class="detail">
-                            Graduated from Tsinghua University, entrepreneur for 17 years. Created China's first online payment platform, YiFuTong, and the first experience-based marketing platform, "ItrybeforeIbuy".
+                            {{item.intro}}
                         </div>
                     </div>
                 </div>
@@ -717,7 +703,7 @@
                                     <img src="../../assets/img/temp/gp.jpg" alt="">
                                 </div>
                                 <div class="p-name">
-                                    <span>5000CHTH</span> 10 wolf cards
+                                    <span>5000{{gameCommonInfo.coin_name}}</span> 10 wolf cards
                                 </div>
                             </a>
                             <a href="#">
@@ -725,7 +711,7 @@
                                     <img src="../../assets/img/temp/gp.jpg" alt="">
                                 </div>
                                 <div class="p-name">
-                                    <span>5000CHTH</span> 10 wolf cards
+                                    <span>5000{{gameCommonInfo.coin_name}}</span> 10 wolf cards
                                 </div>
                             </a>
                         </div>
@@ -735,36 +721,22 @@
 
             <div v-if="tabIndex===2" class="roi">
                 <div class="ps">
-                    Pre sale:<span>1BTC=2000CHTC, relase 100000CHTC</span>
+                    Pre sale:<span>1{{gameCommonInfo.trade_coin}}={{gameCommonInfo.in_price}}{{gameCommonInfo.coin_name}}, relase {{gameCommonInfo.in_quantity}}{{gameCommonInfo.coin_name}}</span>
                 </div>
 
                 <div class="ct">
-                    <div class="ps-card">
+                    <div v-for="(item,index) in tab_info_2" class="ps-card">
                         <div class="ps-title">
-                            <div class="index">1</div>
+                            <div class="index">{{index + 1}}</div>
                             <div class="ps-info">
-                                A digital copy of the game and poster.
+                                {{item.title}}
                             </div>
                         </div>
                         <div class="info">
-                            Pledge $25 or more and we send you a link so you can download a digital copy of this game once its completed. Also the digital poster. Exact date TBT.
+                            {{item.text}}
                         </div>
                         <div class="ps-img">
-                            <img src="../../assets/img/temp/game2.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="ps-card">
-                        <div class="ps-title">
-                            <div class="index">2</div>
-                            <div class="ps-info">
-                                A digital copy of the game and poster.
-                            </div>
-                        </div>
-                        <div class="info">
-                            Pledge $25 or more and we send you a link so you can download a digital copy of this game once its completed. Also the digital poster. Exact date TBT.
-                        </div>
-                        <div class="ps-img">
-                            <img src="../../assets/img/temp/game2.jpg" alt="">
+                            <img v-bind:src="item.pic" alt="">
                         </div>
                     </div>
                 </div>
@@ -772,68 +744,20 @@
 
 
             <div v-if="tabIndex===3" class="updates">
-                <div class="time-line">
+                <div class="time-line" v-for="item in tab_info_3">
                     <div class="time">
-                        Oct 12
+                        {{item.time}}
                     </div>
                     <div class="time-info">
                         <h1>
-                            Monsters Unlocked!
+                            {{item.title}}
                         </h1>
                         <p>
-                            Hell Let Loose is a platoon-based realistic multiplayer first-person shooting game for PC set during the Second World War.
+                            {{item.text}}
                         </p>
                     </div>
                     <div class="time-img">
-                        <img src="../../assets/img/temp/game2.jpg" alt="">
-                    </div>
-                </div>
-                <div class="time-line">
-                    <div class="time">
-                        Oct 12
-                    </div>
-                    <div class="time-info">
-                        <h1>
-                            Monsters Unlocked!
-                        </h1>
-                        <p>
-                            Hell Let Loose is a platoon-based realistic multiplayer first-person shooting game for PC set during the Second World War.
-                        </p>
-                    </div>
-                    <div class="time-img">
-                        <img src="../../assets/img/temp/game2.jpg" alt="">
-                    </div>
-                </div>
-                <div class="time-line">
-                    <div class="time">
-                        Oct 12
-                    </div>
-                    <div class="time-info">
-                        <h1>
-                            Monsters Unlocked!
-                        </h1>
-                        <p>
-                            Hell Let Loose is a platoon-based realistic multiplayer first-person shooting game for PC set during the Second World War.
-                        </p>
-                    </div>
-                    <div class="time-img">
-                        <img src="../../assets/img/temp/game2.jpg" alt="">
-                    </div>
-                </div>
-                <div class="time-line">
-                    <div class="time">
-                        Oct 12
-                    </div>
-                    <div class="time-info">
-                        <h1>
-                            Monsters Unlocked!
-                        </h1>
-                        <p>
-                            Hell Let Loose is a platoon-based realistic multiplayer first-person shooting game for PC set during the Second World War.
-                        </p>
-                    </div>
-                    <div class="time-img">
-                        <img src="../../assets/img/temp/game2.jpg" alt="">
+                        <img v-bind:src="item.pic" alt="">
                     </div>
                 </div>
 
@@ -841,103 +765,126 @@
 
 
             <div v-if="tabIndex===4" class="faq">
-                <div class="q-card">
+                <div class="q-card" v-for="(item,index) in tab_info_4">
                     <div class="q">
-                        Q1: Will Replicade ship outside the United States?
+                        Q{{index + 1}}: {{item.title}}
                     </div>
                     <div class="a">
-                        Yes. Replicade will ship to most areas in the world. Shipping prices may vary
+                        {{item.text}}
                     </div>
                 </div>
-                <div class="q-card">
-                    <div class="q">
-                        Q1: Will Replicade ship outside the United States?
-                    </div>
-                    <div class="a">
-                        Yes. Replicade will ship to most areas in the world. Shipping prices may vary
-                    </div>
-                </div>
-                <div class="q-card">
-                    <div class="q">
-                        Q1: Will Replicade ship outside the United States?
-                    </div>
-                    <div class="a">
-                        Yes. Replicade will ship to most areas in the world. Shipping prices may vary
-                    </div>
-                </div>
-                <div class="q-card">
-                    <div class="q">
-                        Q1: Will Replicade ship outside the United States?
-                    </div>
-                    <div class="a">
-                        Yes. Replicade will ship to most areas in the world. Shipping prices may vary
-                    </div>
-                </div>
-
             </div>
 
 
         </div>
-
     </div>
 </template>
 
 <script>
-    //    import t from '../assets/js/tools';
+    import t from '../../assets/js/tools';
 
     export default {
-        // 没啥大用处
         name: 'app',
         data() {
             return {
                 tabIndex: 1,
                 pid: 0,
-                isGpOf: false
+                isGpOf: false,
+                tab_info_1: {team: []},
+                tab_info_2: undefined,
+                tab_info_3: undefined,
+                tab_info_4: undefined,
+                gameCommonInfo: {},
+                isRaise: true,
+                tab_info_1_intro: {},
+                team: [],
+                has: 0,
+                isLogin: false,
             }
         },
         methods: {
-            // 绑定事件的方法
             tabChange: function (i) {
                 this.tabIndex = i;
+                if (i === 2 && !this.tab_info_2) {
+                    t.get('game/web/detail', {
+                        pid: this.pid,
+                        tab: 2
+                    }, (data) => {
+                        this.tab_info_2 = data.body.data.detail.repay;
+                        console.log(this.tab_info_2);
+                    })
+                }
+                if (i === 3 && !this.tab_info_3) {
+                    t.get('game/web/detail', {
+                        pid: this.pid,
+                        tab: 3
+                    }, (data) => {
+                        this.tab_info_3 = data.body.data.detail.dynamics;
+                    })
+                }
+                if (i === 4 && !this.tab_info_4) {
+                    t.get('game/web/detail', {
+                        pid: this.pid,
+                        tab: 4
+                    }, (data) => {
+                        this.tab_info_4 = data.body.data.detail.faq;
+                    })
+                }
             },
             isOf: function () {
                 let container = document.querySelector('.game-package .scroll');
                 if (container.children.length >= 3) {
                     this.isGpOf = true;
                 }
+            },
+            showDl: function () {
+                $('#myModal').modal('show');
             }
         },
         mounted: function () {
             this.$nextTick(function () {
-                // 可以在此为所欲为
-                //对DOM的操作放这
-                //console.log(this);
                 this.isOf();
-
             })
         },
-        props: ['id'],
+        props: ['id', 'pushStatus'],
         created() {
+            this.isLogin = this.pushStatus;
+            var _this = this;
             this.pid = this.$route.params.id;
+            t.get('game/web/detail', {
+                pid: this.pid,
+                tab: 1
+            }, function (data) {
+                _this.gameCommonInfo = data.body.data.product;
+                _this.tab_info_1 = data.body.data.detail;
+                if (_this.tab_info_1) {
+                    _this.tab_info_1_intro = _this.tab_info_1.intro[0];
+                } else {
+                    _this.tab_info_1_intro = {};
+                }
+                if (data.body.data.detail) {
+                    _this.team = data.body.data.detail.team;
+                } else {
+                    _this.team = [];
+                }
+                if (_this.gameCommonInfo.ratio.indexOf("+") === 0) {
+                    _this.isRaise = true;
+                } else {
+                    _this.isRaise = false;
+                }
+            })
 
+            t._get('trade/info', {product_id: _this.pid, type: 1}, function (data) {
+                _this.has = data.body.data.time;
+            })
 
         },
-        components: {
-            // 引入的组件写在这里
-
-        },
+        components: {},
         watch: {
-            // 监听数据变化
-            // a: function (val, oldVal) {
-            //     console.log('new: %s, old: %s', val, oldVal)
-            // },
-            // // 方法名
-            // b: 'someMethod',
-            // // 深度 watcher
-            // c: {
-            //    handler: function (val, oldVal) { /* ... */ },
-            //    deep: true
-            // }
-        }
+            pushStatus: function () {
+                this.isLogin = this.pushStatus;
+                console.log(this.isLogin);
+            }
+        },
     }
 </script>

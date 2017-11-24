@@ -1,4 +1,4 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
     body {
         background-color: #f9fbff;
     }
@@ -84,7 +84,7 @@
         data() {
             return {
                 leftTime: 5,
-                historyUrl: '/#/en/withdraw_history'
+                historyUrl: '#/en/withdraw-history'
             }
         },
         methods: {

@@ -1,4 +1,4 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
     body {
         background-color: #f9fbff;
     }
@@ -213,6 +213,18 @@
                             /*border-bottom: 0;*/
                         }
                     }
+                    .blank {
+                        text-align: center;
+                        img {
+                            height: 120px;
+                            margin-top: 90px;
+                            margin-bottom: 16px;
+                        }
+                        p {
+                            color: #999999;
+                            font-size: 14px;
+                        }
+                    }
                 }
                 .view-more {
                     display: block;
@@ -242,12 +254,16 @@
                     估值
                 </div>
                 <div class="amount">
-                    <img src="../../assets/img/btc.png" alt=""> 30.65432721 BTC
+                    <img src="../../assets/img/btc.png" alt=""> {{walletData.total_assets}} BTC
                 </div>
-                <div class="rmb">¥ 1000323.35</div>
-                <div class="btnArea">
-                    <a href="#/en/recharge" class="recharge">Recharge</a>
-                    <a href="#/en/withdraw" class="withdraw">Withdraw</a>
+                <div class="rmb">$ {{walletData.total_to_usdt}}</div>
+                <div v-if="isBind" class="btnArea">
+                    <a href="#/en/recharge" class="recharge">充值</a>
+                    <a href="#/en/withdraw" class="withdraw">提现</a>
+                </div>
+                <div v-if="!isBind" class="btnArea">
+                    <a href="#/en/settings/bind" class="recharge">充值</a>
+                    <a href="#/en/settings/bind" class="withdraw">提现</a>
                 </div>
             </div>
             <div class="main clearfix">
@@ -259,37 +275,37 @@
                         <div class="card">
                             <div class="t clearfix">
                                 <div class="i1">BTC资产</div>
-                                <div class="i2">1.64322365</div>
+                                <div class="i2">{{walletData.btc_total}}</div>
                             </div>
                             <div class="b clearfix">
                                 <div class="i1">估值</div>
-                                <div class="i2">$ 4322365</div>
+                                <div class="i2">$ {{walletData.btc_to_usdt}}</div>
                             </div>
                             <div class="b clearfix">
                                 <div class="i1">可用资产</div>
-                                <div class="i2">87.64322365</div>
+                                <div class="i2">{{walletData.btc_avail}}</div>
                             </div>
                             <div class="b clearfix">
                                 <div class="i1">下单冻结</div>
-                                <div class="i2">0.00000000</div>
+                                <div class="i2">{{walletData.btc_frozen}}</div>
                             </div>
                         </div>
                         <div class="card">
                             <div class="t clearfix">
                                 <div class="i1">ETH资产</div>
-                                <div class="i2">1.64322365</div>
+                                <div class="i2">{{walletData.eth_total}}</div>
                             </div>
                             <div class="b clearfix">
                                 <div class="i1">估值</div>
-                                <div class="i2">$ 4322365</div>
+                                <div class="i2">$ {{walletData.eth_to_usdt}}</div>
                             </div>
                             <div class="b clearfix">
                                 <div class="i1">可用资产</div>
-                                <div class="i2">87.64322365</div>
+                                <div class="i2">{{walletData.eth_avail}}</div>
                             </div>
                             <div class="b clearfix">
                                 <div class="i1">下单冻结</div>
-                                <div class="i2">0.00000000</div>
+                                <div class="i2">{{walletData.eth_frozen}}</div>
                             </div>
                         </div>
                     </div>
@@ -303,130 +319,59 @@
                     </div>
                     <div class="money">
                         <div class="cz" v-show="recordIndex===1">
-                            <div class="card">
-                                <div class="t clearfix">
-                                    <div class="i1">
-                                        <p>100 ETH</p>
-                                        <span>2017-10-10 18:36:04</span>
+                            <div v-if="rechargeRecord.length!==0" class="un-blank">
+                                <div class="card" v-for="item in rechargeRecord">
+                                    <div class="t clearfix">
+                                        <div class="i1">
+                                            <p>{{item.value}} {{item.trade_coin}}</p>
+                                            <span>{{item.created_at}}</span>
+                                        </div>
+                                        <div class="i2">
+                                            <div v-if="item.status===1">
+                                                待确认 (<i>{{item.confirms}}</i>/{{item.confirms_need}}）
+                                            </div>
+                                            <div v-if="item.status===2">已完成</div>
+                                            <div v-if="item.status===3">失败</div>
+                                        </div>
                                     </div>
-                                    <div class="i2">
-                                        <div>待确认 (<i>3</i>/30）</div>
-                                        <div class="hide">已完成</div>
+                                    <div class="b">
+                                        <span>地址</span>{{item.toAddr}}
                                     </div>
                                 </div>
-                                <div class="b">
-                                    <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                                </div>
+                                <a href="/#/en/withdraw-history" class="view-more">查看更多</a>
                             </div>
-                            <div class="card">
-                                <div class="t clearfix">
-                                    <div class="i1">
-                                        <p>100 ETH</p>
-                                        <span>2017-10-10 18:36:04</span>
-                                    </div>
-                                    <div class="i2">
-                                        <div>待确认 (<i>3</i>/30）</div>
-                                        <div class="hide">已完成</div>
-                                    </div>
-                                </div>
-                                <div class="b">
-                                    <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                                </div>
+                            <div v-if="rechargeRecord.length===0" class="blank">
+                                <img src="../../assets/img/man_1.png" alt="">
+                                <p>还没有记录哦~</p>
                             </div>
-                            <div class="card">
-                                <div class="t clearfix">
-                                    <div class="i1">
-                                        <p>100 ETH</p>
-                                        <span>2017-10-10 18:36:04</span>
-                                    </div>
-                                    <div class="i2">
-                                        <div>待确认 (<i>3</i>/30）</div>
-                                        <div class="hide">已完成</div>
-                                    </div>
-                                </div>
-                                <div class="b">
-                                    <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="t clearfix">
-                                    <div class="i1">
-                                        <p>100 ETH</p>
-                                        <span>2017-10-10 18:36:04</span>
-                                    </div>
-                                    <div class="i2">
-                                        <div class="hide">待确认 (<i>3</i>/30）</div>
-                                        <div class="">已完成</div>
-                                    </div>
-                                </div>
-                                <div class="b">
-                                    <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                                </div>
-                            </div>
-                            <a href="/#/en/withdraw_history" class="view-more">查看更多</a>
                         </div>
                         <div class="tx" v-show="recordIndex===2">
-                            <div class="card">
-                                <div class="t clearfix">
-                                    <div class="i1">
-                                        <p>200 ETH</p>
-                                        <span>2017-10-10 18:36:04</span>
+                            <div v-if="withdrawRecord.length!==0" class="un-blank">
+                                <div class="card" v-for="item in withdrawRecord">
+                                    <div class="t clearfix">
+                                        <div class="i1">
+                                            <p>{{item.value}} {{item.trade_coin}}</p>
+                                            <span>{{item.created_at}}</span>
+                                        </div>
+                                        <div class="i2">
+                                            <div v-if="item.status===0">未处理</div>
+                                            <div v-if="item.status===1">
+                                                待确认 (<i>{{item.confirms}}</i>/{{item.confirms_need}}）
+                                            </div>
+                                            <div v-if="item.status===2">已完成</div>
+                                            <div v-if="item.status===3">失败</div>
+                                        </div>
                                     </div>
-                                    <div class="i2">
-                                        <div>待确认 (<i>3</i>/30）</div>
-                                        <div class="hide">已完成</div>
+                                    <div class="b">
+                                        <span>地址</span>{{item.toAddr}}
                                     </div>
                                 </div>
-                                <div class="b">
-                                    <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                                </div>
+                                <a href="/#/en/withdraw-history" class="view-more">查看更多</a>
                             </div>
-                            <div class="card">
-                                <div class="t clearfix">
-                                    <div class="i1">
-                                        <p>100 ETH</p>
-                                        <span>2017-10-10 18:36:04</span>
-                                    </div>
-                                    <div class="i2">
-                                        <div>待确认 (<i>3</i>/30）</div>
-                                        <div class="hide">已完成</div>
-                                    </div>
-                                </div>
-                                <div class="b">
-                                    <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                                </div>
+                            <div v-if="withdrawRecord.length===0" class="blank">
+                                <img src="../../assets/img/man_1.png" alt="">
+                                <p>还没有记录哦~</p>
                             </div>
-                            <div class="card">
-                                <div class="t clearfix">
-                                    <div class="i1">
-                                        <p>100 ETH</p>
-                                        <span>2017-10-10 18:36:04</span>
-                                    </div>
-                                    <div class="i2">
-                                        <div>待确认 (<i>3</i>/30）</div>
-                                        <div class="hide">已完成</div>
-                                    </div>
-                                </div>
-                                <div class="b">
-                                    <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="t clearfix">
-                                    <div class="i1">
-                                        <p>100 ETH</p>
-                                        <span>2017-10-10 18:36:04</span>
-                                    </div>
-                                    <div class="i2">
-                                        <div class="hide">待确认 (<i>3</i>/30）</div>
-                                        <div class="">已完成</div>
-                                    </div>
-                                </div>
-                                <div class="b">
-                                    <span>地址</span>0xf19b8d85c8d8154d1c41eb243d9ae98dc6c44tetee
-                                </div>
-                            </div>
-                            <a href="/#/en/withdraw_history" class="view-more">查看更多</a>
                         </div>
 
                     </div>
@@ -438,7 +383,7 @@
 </template>
 
 <script>
-    //    import t from '../assets/js/tools';
+    import t from '../../assets/js/tools';
 
     export default {
         // 没啥大用处
@@ -446,6 +391,10 @@
         data() {
             return {
                 recordIndex: 1,
+                walletData: {},
+                rechargeRecord: [],
+                withdrawRecord: [],
+                isBind: false
             }
         },
         methods: {
@@ -461,7 +410,27 @@
             })
         },
         created() {
+            var _this = this;
 
+            t._get('user', {uid: t.getCookie('uid')}, function (data) {
+                console.log(data);
+                if (data.body.data.mobile) {
+                    _this.isBind = true;
+                } else {
+                    _this.isBind = false;
+                }
+            });
+
+            t._get('users/coin/asset', {}, function (data) {
+                _this.walletData = data.body.data;
+            })
+            t._get('users/coin/recharge/record', {limit: 4}, function (data) {
+                _this.rechargeRecord = data.body.data.list;
+            })
+            t._get('users/coin/withdraw/record', {limit: 4}, function (data) {
+                _this.withdrawRecord = data.body.data.list;
+                console.log(_this.withdrawRecord);
+            })
         },
         components: {
             // 引入的组件写在这里

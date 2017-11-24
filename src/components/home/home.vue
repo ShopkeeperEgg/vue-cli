@@ -1,4 +1,4 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
 
 </style>
 
@@ -31,7 +31,8 @@
         name: 'app',
         data() {
             return {
-                title: '我是一个小毛驴'
+                title: '我是一个小毛驴',
+                index: 1
             }
         },
         methods: {
@@ -47,6 +48,7 @@
             })
         },
         created() {
+            this.$emit('getIndex', this.index);
 
         },
         components: {

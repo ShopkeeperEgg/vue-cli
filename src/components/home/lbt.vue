@@ -1,4 +1,4 @@
-<style scope lang="less">
+<style scoped="scoped" lang="less">
     #carousel-example-generic {
         width: 100%;
         height: 428px;
@@ -16,6 +16,7 @@
                 transition: all .3s linear;
                 margin-left: 5px;
                 margin-right: 5px;
+                /*padding: 5px;*/
                 &.active {
                     width: 14px;
                     height: 4px;
@@ -51,30 +52,15 @@
         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators">
-                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                <li v-for="(item,index) in lbtArr" data-target="#carousel-example-generic" :data-slide-to="index"
+                    :class="{'active':index===0}"></li>
             </ol>
 
             <!-- Wrapper for slides -->
             <div class="carousel-inner" role="listbox">
-                <div class="item active">
-                    <a href="javascript:;">
-                        <img src="../../assets/img/temp/lbt.jpg" alt="...">
-                    </a>
-                    <div class="carousel-caption">
-                    </div>
-                </div>
-                <div class="item">
-                    <a href="javascript:;">
-                        <img src="../../assets/img/temp/lbt.jpg" style="width: 1440px;" alt="...">
-                    </a>
-                    <div class="carousel-caption">
-                    </div>
-                </div>
-                <div class="item">
-                    <a href="javascript:;">
-                        <img src="../../assets/img/temp/lbt.jpg" style="width: 1440px;" alt="...">
+                <div v-for="(item,index) in lbtArr" :class="['item',{active:index===0}]">
+                    <a :href="item.click_url">
+                        <img :src="item.pic_url" alt="...">
                     </a>
                     <div class="carousel-caption">
                     </div>
@@ -95,14 +81,14 @@
 </template>
 
 <script>
-    //    import t from '../assets/js/tools';
+    import t from '../../assets/js/tools';
 
     export default {
         // 没啥大用处
         name: 'app',
         data() {
             return {
-                title: '我是一个小毛驴'
+                lbtArr: []
             }
         },
         methods: {
@@ -118,7 +104,11 @@
             })
         },
         created() {
-
+            var _this = this;
+            t.get('game/caro', {}, function (data) {
+                _this.lbtArr = data.body.data.list;
+                console.log(_this.lbtArr);
+            });
         },
         components: {
             // 引入的组件写在这里

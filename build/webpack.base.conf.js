@@ -68,14 +68,16 @@ module.exports = {
     plugins: [
         new webpack.optimize.CommonsChunkPlugin('common.js'),
         new webpack.ProvidePlugin({
-            jQuery: "jquery",
-            $: "jquery",
+            // jQuery: "jquery",
+            // $: "jquery",
             alias: {
                 'vue$': 'vue/dist/vue.esm.js',
                 '@': resolve('src'),
                 'assets': path.resolve(__dirname, '../src/assets'),
-                'jquery': "jquery/src/jquery"
-            }
+                'jquery': "jquery/src/jquery",
+            },
+            'moment': "moment",
+            'datapicker': "datapicker"
         })
     ]
 }
