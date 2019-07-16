@@ -33,8 +33,8 @@ if (dev) {
 
 
 let timestamp = Date.now();
-let app_id = '48872373383';
-let app_secret = 'Her*HofarjHfj*^)%afjer^%893';
+let app_id = 'test';
+let app_secret = 'test';
 let sign = hex_md5(timestamp + app_secret);
 
 export default {
